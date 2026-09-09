@@ -201,7 +201,13 @@
                 "label": "Pošalji obavještenje svim online igračima.",
                 "dialog_desc": "Pošalji obavještenje svim online igračima.",
                 "dialog_placeholder": "Tvoje obavještenje...",
-                "dialog_success": "Slanje obavještenja."
+                "dialog_success": "Slanje obavještenja.",
+                "mode_server": "Server",
+                "mode_server_label": "Show the message in the txAdmin in-game NUI.",
+                "mode_gksphone": "gksphone",
+                "mode_gksphone_label": "Send a gksphone notification to all players.",
+                "mode_gta": "GTA",
+                "mode_gta_label": "Show the classic GTA notification above the minimap."
             },
             "clear_area": {
                 "title": "Očisti područje mape",

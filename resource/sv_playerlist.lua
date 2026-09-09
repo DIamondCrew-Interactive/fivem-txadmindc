@@ -202,6 +202,10 @@ RegisterNetEvent('txsv:plist:mugshotCaptured', function(playerID, mugshot)
         logError('Rejected invalid mugshot for player ' .. json.encode(source))
         return
     end
+    local playerData = TX_PLAYERLIST[tostring(source)]
+    if type(playerData) == 'table' then
+        playerData.mugshot = mugshot
+    end
     PrintStructuredTrace(json.encode({
         type = 'txAdminPlayerlistEvent',
         event = 'playerMugshot',
@@ -245,6 +249,9 @@ RegisterNetEvent('txsv:req:plist:getDetailed', function(getPlayerNames)
         }
         if getPlayerNames then
             players[#players][6] = playerData.name
+        end
+        if type(playerData.mugshot) == 'string' then
+            players[#players][7] = playerData.mugshot
         end
     end
     local admins = {}

@@ -15,6 +15,8 @@ const FAKE_LOAD_TIME = 250;
 
 const DivWrapper = styled("div")({
   overflow: "auto",
+  height: "100%",
+  padding: "18px 4px 24px",
 });
 
 const DivLoadTrigger = styled("div")({
@@ -92,7 +94,9 @@ export const PlayersListGrid: React.FC = () => {
     <DivWrapper>
       <Box
         display="grid"
-        gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))"
+        gridTemplateColumns="repeat(auto-fill, minmax(270px, 1fr))"
+        gap="14px"
+        alignItems="start"
       >
         {slicedPlayers.map((player) => (
           <PlayerCard playerData={player} key={player.id} />

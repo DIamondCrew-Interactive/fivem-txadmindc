@@ -4,6 +4,7 @@ import { MenuListItem, MenuListItemMulti } from "./MenuListItem";
 import {
   AccessibilityNew,
   Announcement,
+  Campaign,
   Build,
   CenterFocusWeak,
   ControlCamera,
@@ -39,26 +40,11 @@ import { getVehicleSpawnDialogData, vehiclePlaceholderReplacer } from "@nui/src/
 import { useNuiEvent } from "@nui/src/hooks/useNuiEvent";
 import { usePlayerModalContext } from "@nui/src/provider/PlayerModalProvider";
 
-const fadeHeight = 20;
 const listHeight = 402;
-
-const BoxFadeTop = styled(Box)(({ theme }) => ({
-  backgroundImage: `linear-gradient(to top, transparent, ${theme.palette.background.default})`,
-  position: "relative",
-  bottom: listHeight + fadeHeight - 4,
-  height: fadeHeight,
-}));
-
-const BoxFadeBottom = styled(Box)(({ theme }) => ({
-  backgroundImage: `linear-gradient(to bottom, transparent, ${theme.palette.background.default})`,
-  position: "relative",
-  height: fadeHeight,
-  bottom: fadeHeight * 2,
-}));
 
 const BoxIcon = styled(Box)(({ theme }) => ({
   color: theme.palette.text.secondary,
-  marginTop: -(fadeHeight * 2),
+  marginTop: 4,
   display: "flex",
   justifyContent: "center",
 }));
@@ -70,6 +56,12 @@ const StyledList = styled(List)({
     display: "none",
   },
 });
+
+enum AnnouncementMode {
+  Server = "server",
+  Gksphone = "gksphone",
+  Gta = "gta",
+}
 
 // TODO: This component is kinda getting out of hand, might want to split it somehow
 export const MainPageList: React.FC = () => {
@@ -86,6 +78,7 @@ export const MainPageList: React.FC = () => {
   const isRedm = useIsRedmValue()
   const { closeMenu } = usePlayerModalContext();
   const [lastVehicleSpawned, setLastVehicleSpawned] = useState<string | null>(null);
+  const [announcementMode, setAnnouncementMode] = useState(AnnouncementMode.Server);
 
   //FIXME: this is so the menu resets multi selectors when we close it
   // but it is not working, and when I do this the first time we press
@@ -252,7 +245,7 @@ export const MainPageList: React.FC = () => {
   };
 
   //=============================================
-  const handleAnnounceMessage = () => {
+  const handleAnnounceMessage = (mode = announcementMode) => {
     openDialog({
       title: t("nui_menu.page_main.announcement.title"),
       description: t("nui_menu.page_main.announcement.dialog_desc"),
@@ -261,7 +254,15 @@ export const MainPageList: React.FC = () => {
         enqueueSnackbar(t("nui_menu.page_main.announcement.dialog_success"), {
           variant: "success",
         });
-        fetchNui("sendAnnouncement", { message });
+        fetchNui("sendAnnouncement", {
+          message: JSON.stringify({
+            mode,
+            message,
+            color: "#2EC7FF",
+            logo: "images/diamond-circle-logo.png",
+            phoneType: "success",
+          }),
+        });
       },
     });
   };
@@ -493,10 +494,42 @@ export const MainPageList: React.FC = () => {
       //MISC
       {
         title: t("nui_menu.page_main.announcement.title"),
-        label: t("nui_menu.page_main.announcement.label"),
         requiredPermission: "announcement",
+        isMultiAction: true,
         icon: <Announcement />,
-        onSelect: handleAnnounceMessage,
+        initialValue: { value: announcementMode, label: t("nui_menu.page_main.announcement.label") },
+        actions: [
+          {
+            name: t("nui_menu.page_main.announcement.mode_server"),
+            label: t("nui_menu.page_main.announcement.mode_server_label"),
+            value: AnnouncementMode.Server,
+            icon: <Announcement />,
+            onSelect: () => {
+              setAnnouncementMode(AnnouncementMode.Server);
+              handleAnnounceMessage(AnnouncementMode.Server);
+            },
+          },
+          {
+            name: t("nui_menu.page_main.announcement.mode_gksphone"),
+            label: t("nui_menu.page_main.announcement.mode_gksphone_label"),
+            value: AnnouncementMode.Gksphone,
+            icon: <Campaign />,
+            onSelect: () => {
+              setAnnouncementMode(AnnouncementMode.Gksphone);
+              handleAnnounceMessage(AnnouncementMode.Gksphone);
+            },
+          },
+          {
+            name: t("nui_menu.page_main.announcement.mode_gta"),
+            label: t("nui_menu.page_main.announcement.mode_gta_label"),
+            value: AnnouncementMode.Gta,
+            icon: <Campaign />,
+            onSelect: () => {
+              setAnnouncementMode(AnnouncementMode.Gta);
+              handleAnnounceMessage(AnnouncementMode.Gta);
+            },
+          },
+        ],
       },
       {
         title: t("nui_menu.page_main.clear_area.title"),
@@ -518,7 +551,7 @@ export const MainPageList: React.FC = () => {
       //   onSelect: handleSpawnWeapon,
       // },
     ],
-    [playerMode, teleportMode, vehicleMode, healMode, serverCtx, isRedm, lastVehicleSpawned]
+    [playerMode, teleportMode, vehicleMode, healMode, announcementMode, serverCtx, isRedm, lastVehicleSpawned]
   );
 
   return (
@@ -543,8 +576,6 @@ export const MainPageList: React.FC = () => {
           )
         )}
       </StyledList>
-      <BoxFadeTop style={{ opacity: curSelected <= 1 ? 0 : 1 }} />
-      <BoxFadeBottom style={{ opacity: curSelected >= 6 ? 0 : 1 }} />
       <BoxIcon display="flex" justifyContent="center">
         <ExpandMore />
       </BoxIcon>

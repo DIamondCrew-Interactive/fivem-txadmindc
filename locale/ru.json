@@ -201,7 +201,13 @@
                 "label": "Отправить объявление всем игрокам.",
                 "dialog_desc": "Введите сообщение, которое вы хотите транслировать всем игрокам.",
                 "dialog_placeholder": "Ваше объявление...",
-                "dialog_success": "Отправка объявления."
+                "dialog_success": "Отправка объявления.",
+                "mode_server": "Server",
+                "mode_server_label": "Show the message in the txAdmin in-game NUI.",
+                "mode_gksphone": "gksphone",
+                "mode_gksphone_label": "Send a gksphone notification to all players.",
+                "mode_gta": "GTA",
+                "mode_gta_label": "Show the classic GTA notification above the minimap."
             },
             "clear_area": {
                 "title": "Сбросить Мировую область",

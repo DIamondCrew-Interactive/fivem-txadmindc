@@ -22,15 +22,26 @@ const classes = {
   barInner: `${PREFIX}-barInner`,
   icon: `${PREFIX}-icon`,
   tooltipOverride: `${PREFIX}-tooltipOverride`,
+  mugshot: `${PREFIX}-mugshot`,
+  mugshotFallback: `${PREFIX}-mugshotFallback`,
 };
 
 const StyledBox = styled(Box)(({ theme }) => ({
   [`& .${classes.paper}`]: {
-    padding: 20,
+    padding: "14px 16px",
     borderRadius: 10,
     cursor: "pointer",
+    background:
+      "linear-gradient(135deg, rgba(24, 30, 42, 0.96), rgba(18, 23, 33, 0.92))",
+    border: "1px solid rgba(46, 199, 255, 0.12)",
+    boxShadow: "0 12px 28px rgba(0, 0, 0, 0.24)",
+    transition: "border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease",
     "&:hover": {
-      backgroundColor: theme.palette.action.selected,
+      background:
+        "linear-gradient(135deg, rgba(33, 41, 58, 0.98), rgba(23, 29, 42, 0.96))",
+      borderColor: "rgba(244, 60, 178, 0.45)",
+      boxShadow: "0 16px 36px rgba(244, 60, 178, 0.14)",
+      transform: "translateY(-1px)",
     },
   },
 
@@ -47,12 +58,42 @@ const StyledBox = styled(Box)(({ theme }) => ({
   },
 
   [`& .${classes.icon}`]: {
-    paddingRight: 7,
+    paddingRight: 8,
     color: theme.palette.primary.main,
+    display: "inline-flex",
+    alignItems: "center",
   },
 
   [`& .${classes.tooltipOverride}`]: {
     fontSize: 12,
+  },
+
+  [`& .${classes.mugshot}`]: {
+    width: 48,
+    height: 48,
+    borderRadius: 10,
+    objectFit: "cover",
+    marginRight: 12,
+    border: "1px solid rgba(243, 211, 107, 0.42)",
+    background: "rgba(255, 255, 255, 0.05)",
+    boxShadow: "0 10px 24px rgba(0, 0, 0, 0.22)",
+    flex: "0 0 auto",
+  },
+
+  [`& .${classes.mugshotFallback}`]: {
+    width: 48,
+    height: 48,
+    borderRadius: 10,
+    marginRight: 12,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#071016",
+    fontWeight: 800,
+    border: "1px solid rgba(243, 211, 107, 0.42)",
+    background: "linear-gradient(135deg, #2EC7FF, #F43CB2)",
+    boxShadow: "0 10px 24px rgba(0, 0, 0, 0.22)",
+    flex: "0 0 auto",
   },
 }));
 
@@ -109,12 +150,22 @@ const PlayerCard: React.FC<{ playerData: PlayerData }> = ({ playerData }) => {
 
   const upperCaseStatus = playerData.vType.charAt(0).toUpperCase() + playerData.vType.slice(1);
   const healthBarSize = Math.max(0, playerData.health);
+  const fallbackInitial = playerData.displayName.trim().charAt(0).toUpperCase() || "?";
 
   return (
-    <StyledBox p={1}>
+    <StyledBox>
       <div onClick={handlePlayerClick}>
         <Paper className={classes.paper}>
-          <Box display="flex" alignItems="center" pb="5px">
+          <Box display="flex" alignItems="center" pb="12px">
+            {playerData.mugshot ? (
+              <img
+                className={classes.mugshot}
+                src={playerData.mugshot}
+                alt=""
+              />
+            ) : (
+              <Box className={classes.mugshotFallback}>{fallbackInitial}</Box>
+            )}
             <Box flexGrow={1} display="flex" overflow="hidden">
               <Tooltip
                 title={upperCaseStatus}
@@ -129,17 +180,23 @@ const PlayerCard: React.FC<{ playerData: PlayerData }> = ({ playerData }) => {
                 </span>
               </Tooltip>
               <Typography
-                style={{ marginRight: 5 }}
+                style={{
+                  marginRight: 8,
+                  minWidth: 30,
+                  height: 24,
+                  borderRadius: 999,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "rgba(255, 255, 255, 0.08)",
+                }}
                 variant="subtitle1"
                 color="textSecondary"
               >
                 {playerData.id}
               </Typography>
-              <Typography variant="subtitle1" color="textSecondary">
-                |
-              </Typography>
               <Typography
-                style={{ marginLeft: 5 }}
+                style={{ marginLeft: 0, fontWeight: 700 }}
                 noWrap
                 variant="subtitle1"
                 color="textPrimary"
@@ -147,7 +204,7 @@ const PlayerCard: React.FC<{ playerData: PlayerData }> = ({ playerData }) => {
                 {playerData.admin && "🛡️"} {playerData.displayName}
               </Typography>
               <Typography
-                style={{ marginLeft: 7, minWidth: "fit-content" }}
+                style={{ marginLeft: 10, minWidth: "fit-content", fontWeight: 600 }}
                 noWrap
                 variant="subtitle1"
                 color="textSecondary"

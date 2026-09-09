@@ -46,6 +46,10 @@ export interface PlayerData {
    * If this player is an admin
    **/
   admin: boolean;
+  /**
+   * Cached FiveM mugshot data URL, when available.
+   */
+  mugshot?: string;
 }
 
 export type LuaPlayerData = Omit<PlayerData, 'displayName' | 'pureName'> & { name: string };
@@ -73,6 +77,7 @@ export const usePlayerListListener = () => {
         dist: player.dist,
         health: player.health,
         admin: player.admin,
+        mugshot: player.mugshot,
       } satisfies PlayerData;
     });
     setPlayerList(newPlayerList);

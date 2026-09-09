@@ -201,7 +201,13 @@
                 "label": "Kirim pengumuman ke semua pemain online.",
                 "dialog_desc": "Masukkan pesan yang ingin Anda siarkan ke semua pemain.",
                 "dialog_placeholder": "Pengumuman Anda...",
-                "dialog_success": "Mengirim pengumuman."
+                "dialog_success": "Mengirim pengumuman.",
+                "mode_server": "Server",
+                "mode_server_label": "Show the message in the txAdmin in-game NUI.",
+                "mode_gksphone": "gksphone",
+                "mode_gksphone_label": "Send a gksphone notification to all players.",
+                "mode_gta": "GTA",
+                "mode_gta_label": "Show the classic GTA notification above the minimap."
             },
             "clear_area": {
                 "title": "Reset Area Dunia",

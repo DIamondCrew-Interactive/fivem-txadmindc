@@ -201,7 +201,13 @@
                 "label": "Odeslat oznámení všem online hráčům.",
                 "dialog_desc": "Odeslat oznámení všem online hráčům.",
                 "dialog_placeholder": "Tvé oznámení...",
-                "dialog_success": "Odesílání oznámení."
+                "dialog_success": "Odesílání oznámení.",
+                "mode_server": "Server",
+                "mode_server_label": "Zobrazí zprávu přímo v txAdmin NUI menu.",
+                "mode_gksphone": "gksphone",
+                "mode_gksphone_label": "Pošle gksphone notifikaci všem hráčům.",
+                "mode_gta": "GTA",
+                "mode_gta_label": "Zobrazí klasickou GTA notifikaci nad minimapou."
             },
             "clear_area": {
                 "title": "Obnovit oblast",

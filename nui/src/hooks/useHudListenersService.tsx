@@ -102,8 +102,12 @@ const messageSound = new Audio("sounds/message.mp3");
 
 const captureMugshot = (txd: string): Promise<string> => new Promise((resolve, reject) => {
   const image = new Image();
+  const timeout = window.setTimeout(() => {
+    reject(new Error("Mugshot capture timed out."));
+  }, 5000);
   image.onload = () => {
     try {
+      window.clearTimeout(timeout);
       const canvas = document.createElement("canvas");
       canvas.width = image.naturalWidth || 128;
       canvas.height = image.naturalHeight || 128;
@@ -115,7 +119,11 @@ const captureMugshot = (txd: string): Promise<string> => new Promise((resolve, r
       reject(error);
     }
   };
-  image.onerror = reject;
+  image.onerror = (error) => {
+    window.clearTimeout(timeout);
+    reject(error);
+  };
+  image.crossOrigin = "anonymous";
   image.src = `https://nui-img/${txd}/${txd}`;
 });
 

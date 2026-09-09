@@ -201,7 +201,13 @@
                 "label": "Faire une annonce pour tous les joueurs actuellement connectés.",
                 "dialog_desc": "Entrez le message que vous souhaitez diffuser à tous les joueurs..",
                 "dialog_placeholder": "Message",
-                "dialog_success": "L'annonce est en train d'être envoyée."
+                "dialog_success": "L'annonce est en train d'être envoyée.",
+                "mode_server": "Server",
+                "mode_server_label": "Show the message in the txAdmin in-game NUI.",
+                "mode_gksphone": "gksphone",
+                "mode_gksphone_label": "Send a gksphone notification to all players.",
+                "mode_gta": "GTA",
+                "mode_gta_label": "Show the classic GTA notification above the minimap."
             },
             "clear_area": {
                 "title": "Nettoyer la zone",

@@ -37,7 +37,8 @@ function sendReactPlayerlist()
             health = playerData.health,
             dist = playerData.dist,
             vType = playerData.vType,
-            admin = playerData.admin
+            admin = playerData.admin,
+            mugshot = playerData.mugshot
         }
     end
     -- print("========== function sendReactPlayerlist()")
@@ -61,7 +62,8 @@ RegisterNetEvent('txcl:plist:setInitial', function(payload)
             health = 0,
             dist = -1,
             vType = "unknown",
-            admin = false
+            admin = false,
+            mugshot = playerData[3]
         }
     end
     -- print("------------------------------------")
@@ -103,6 +105,9 @@ RegisterNetEvent('txcl:plist:setDetailed', function(players, admins)
             if playerData[6] then
                 LOCAL_PLAYERLIST[pidStr].name = playerData[6]
             end
+        end
+        if type(playerData[7]) == 'string' then
+            LOCAL_PLAYERLIST[pidStr].mugshot = playerData[7]
         end
 
         --Mark as updated
