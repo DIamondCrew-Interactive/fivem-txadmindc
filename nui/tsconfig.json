@@ -10,13 +10,14 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "ES6",
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
     
     /* mod resolution. */
+    "baseUrl": ".",
     "paths": {
       "@shared/*": ["../shared/*"],
       "@nui/*": ["./*"]

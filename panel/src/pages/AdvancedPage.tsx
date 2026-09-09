@@ -75,7 +75,7 @@ function HelpPopover({ onCommandClick }: { onCommandClick: (c: string) => void }
 }
 
 
-function OutputArea({ output }: { output: RunAdvancedCommandRespSuccess | null }) {
+function OutputArea({ output }: { output: RunAdvancedCommandResp | null }) {
     return (
         <div className="pt-4">
             {output ? (
@@ -105,7 +105,7 @@ function OutputArea({ output }: { output: RunAdvancedCommandRespSuccess | null }
 
 export default function AdvancedPage() {
     const inputRef = useRef<HTMLInputElement>(null);
-    const [output, setOutput] = useState<RunAdvancedCommandRespSuccess | null>(null);
+    const [output, setOutput] = useState<RunAdvancedCommandResp | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const runCommandApi = useBackendApi<RunAdvancedCommandResp, RunAdvancedCommandReq>({

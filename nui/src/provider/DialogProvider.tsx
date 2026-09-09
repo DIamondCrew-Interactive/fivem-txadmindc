@@ -9,8 +9,6 @@ import React, {
   useState,
 } from "react";
 
-import { styled } from '@mui/material/styles';
-
 import {
   Button,
   Dialog,
@@ -22,6 +20,7 @@ import {
   TextField,
   Theme,
   useTheme,
+  styled,
 } from "@mui/material";
 import { Create } from "@mui/icons-material";
 import { useKeyboardNavContext } from "./KeyboardNavProvider";
@@ -49,11 +48,11 @@ interface InputDialogProps {
 
 interface DialogProviderContext {
   openDialog: (dialogProps: InputDialogProps) => void;
-  closeDialog: () => void;
+  closeDialog: ReactEventHandler<{}>;
   isDialogOpen: boolean;
 }
 
-const DialogContext = createContext(null);
+const DialogContext = createContext<DialogProviderContext | null>(null);
 
 const defaultDialogState = {
   description: "This is the default description for whatever",
@@ -218,5 +217,10 @@ export const DialogProvider: React.FC<DialogProviderProps> = ({ children }) => {
   );
 };
 
-export const useDialogContext = () =>
-  useContext<DialogProviderContext>(DialogContext);
+export const useDialogContext = () => {
+  const context = useContext(DialogContext);
+  if (!context) {
+    throw new Error("useDialogContext must be used within DialogProvider");
+  }
+  return context;
+};

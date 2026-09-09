@@ -1,6 +1,5 @@
 import React from "react";
-import { styled } from '@mui/material/styles';
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography, styled } from "@mui/material";
 import { usePlayerDetailsValue } from "../../../state/playerDetails.state";
 import { FileCopy } from "@mui/icons-material";
 import { copyToClipboard } from "../../../utils/copyToClipboard";

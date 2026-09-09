@@ -15,19 +15,6 @@ import { useIsRedm } from "./state/isRedm.state";
 
 registerDebugFunctions();
 
-//Instantiating the two themes
-declare module '@mui/material/styles' {
-  interface Theme {
-      name: string;
-      logo: string;
-  }
-
-  // allow configuration using `createTheme`
-  interface ThemeOptions {
-      name?: string;
-      logo?: string;
-  }
-}
 const menuRedmTheme = createTheme(rawMenuRedmTheme);
 const menuTheme = createTheme(rawMenuTheme);
 
@@ -92,6 +79,9 @@ const App = () => {
 
 
 const rootContainer = document.getElementById("root");
+if (!rootContainer) {
+  throw new Error('Missing NUI root container.');
+}
 const root = createRoot(rootContainer);
 root.render(
   <RecoilRoot>

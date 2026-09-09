@@ -9,7 +9,7 @@
         "build": "vite build --mode production",
         "dev": "vite build --watch --mode development",
         "browser": "vite dev --port 40121 --strictPort --mode devNuiBrowser",
-        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "typecheck": "cd .. && tsc -p tsconfig.typecheck.json --pretty false",
         "license:report": "npx license-report > ../.reports/license/nui.html"
     },
     "keywords": [],

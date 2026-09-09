@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, ReactNode } from "react";
 import {
   Button,
   Dialog,
@@ -14,13 +14,17 @@ interface ErrorCompState {
   error: Error | null;
 }
 
-export class TopLevelErrorBoundary extends Component<any, ErrorCompState> {
-  state = {
+interface TopLevelErrorBoundaryProps {
+  children: ReactNode;
+}
+
+export class TopLevelErrorBoundary extends Component<TopLevelErrorBoundaryProps, ErrorCompState> {
+  state: ErrorCompState = {
     hasError: false,
     error: null,
   };
 
-  constructor(props) {
+  constructor(props: TopLevelErrorBoundaryProps) {
     super(props);
     this.handleReloadClick.bind(this);
   }
@@ -29,7 +33,7 @@ export class TopLevelErrorBoundary extends Component<any, ErrorCompState> {
     if (this.state.hasError) fetchNui("focusInputs", true);
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(error: Error): ErrorCompState {
     return { hasError: true, error };
   }
 
@@ -50,7 +54,7 @@ export class TopLevelErrorBoundary extends Component<any, ErrorCompState> {
               message is shown below for developer reference.
               <br />
               <br />
-              <code style={{ color: "red" }}>{this.state.error.message}</code>
+              <code style={{ color: "red" }}>{this.state.error?.message ?? 'Unknown error'}</code>
             </DialogContentText>
           </DialogContent>
           <DialogActions>

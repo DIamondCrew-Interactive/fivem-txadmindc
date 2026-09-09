@@ -1,6 +1,5 @@
 import React, { memo } from "react";
-import { styled } from "@mui/material/styles";
-import { Box, Paper, Theme, Tooltip, Typography } from "@mui/material";
+import { Box, Paper, Theme, Tooltip, Typography, styled } from "@mui/material";
 import {
   DirectionsBoat,
   DirectionsWalk,

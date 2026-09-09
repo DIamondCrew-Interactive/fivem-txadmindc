@@ -96,14 +96,14 @@ const DialogBanView: React.FC = () => {
       }
     )
       .then((result) => {
-        if ("success" in result && result.success) {
+        if (result && "success" in result && result.success) {
           setModalOpen(false);
           enqueueSnackbar(t(`nui_menu.player_modal.ban.success`), {
             variant: "success",
           });
         } else {
           enqueueSnackbar(
-            (result as GenericApiErrorResp).error ?? t("nui_menu.misc.unknown_error"),
+            (result && "error" in result) ? result.error : t("nui_menu.misc.unknown_error"),
             { variant: "error" }
           );
         }

@@ -1,3 +1,4 @@
+import cleanPlayerName from "@shared/cleanPlayerName";
 import { PlayerData, VehicleStatus } from "../hooks/usePlayerListListener";
 import { arrayRandom } from "./miscUtils";
 
@@ -27,6 +28,7 @@ export function mockPlayerData(players = 500) {
     const randomStatusIdx = Math.floor(Math.random() * 5);
     const randomStatus = statuses[randomStatusIdx];
     const isAdmin = Math.floor(Math.random() * 5) === 1
+    const { displayName, pureName } = cleanPlayerName(randomUsername);
 
     playerData.push({
       admin: isAdmin,
@@ -34,7 +36,8 @@ export function mockPlayerData(players = 500) {
       dist: randomDist,
       health: Math.floor(Math.random() * 100),
       // health: -1,
-      name: randomUsername,
+      displayName,
+      pureName,
       vType: randomStatus,
     });
   }

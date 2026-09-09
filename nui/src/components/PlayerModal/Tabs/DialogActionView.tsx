@@ -1,9 +1,9 @@
 import React from "react";
-import { styled } from "@mui/material/styles";
 import {
   Box,
   Button,
   DialogContent,
+  styled,
   Tooltip,
   TooltipProps,
   Typography,
@@ -71,16 +71,16 @@ const DialogActionView: React.FC = () => {
 
   //Helper
   const handleGenericApiResponse = (
-    result: GenericApiResp,
+    result: GenericApiResp | false,
     successMessageKey: string
   ) => {
-    if ("success" in result && result.success === true) {
+    if (result && "success" in result && result.success === true) {
       enqueueSnackbar(t(`nui_menu.player_modal.actions.${successMessageKey}`), {
         variant: "success",
       });
     } else {
       enqueueSnackbar(
-        (result as GenericApiErrorResp).error ?? t("nui_menu.misc.unknown_error"),
+        (result && "error" in result) ? result.error : t("nui_menu.misc.unknown_error"),
         { variant: "error" }
       );
     }

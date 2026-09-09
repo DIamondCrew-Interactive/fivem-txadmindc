@@ -24,7 +24,7 @@ interface fetchWebPipeOpts<T> {
 export const fetchWebPipe = async <T = any>(
   path: ValidPath,
   options?: fetchWebPipeOpts<T>
-): Promise<T> => {
+): Promise<T | false> => {
   const reqPath = WEBPIPE_PATH + path;
   const timeout = options?.timeout || PipeTimeout.MEDIUM;
 

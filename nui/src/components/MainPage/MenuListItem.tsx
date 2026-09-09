@@ -1,5 +1,4 @@
 import React, { memo, useEffect, useRef, useState } from "react";
-import { styled } from '@mui/material/styles';
 import {
   Box,
   BoxProps,
@@ -9,6 +8,7 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Typography,
+  styled,
 } from "@mui/material";
 import { useKeyboardNavigation } from "../../hooks/useKeyboardNavigation";
 import { Code } from "@mui/icons-material";

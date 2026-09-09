@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "build": "rimraf dist tmp_core_tsc && npm run build -w nui && npm run build -w panel && npm run build -w core && npm run license:distfile",
+    "release:prepare": "node scripts/build/prepare-release.mjs",
     "prepare": "husky install",
     "test": "npm run test --workspaces",
     "typecheck": "npm run typecheck --workspaces",

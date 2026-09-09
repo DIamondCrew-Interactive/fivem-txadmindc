@@ -26,6 +26,12 @@ type ServerLogType = {
     msg: string;
 }
 
+type DiagnosticsApiResponse = {
+    reportId?: string;
+    error?: string;
+    message?: string;
+};
+
 /**
  * Prepares and sends the diagnostics report to txAPI
  */
@@ -73,12 +79,13 @@ export default async function SendDiagnosticsReport(ctx: AuthedCtx) {
     //Env vars
     const envVars: Record<string, string> = {};
     for (const [envKey, envValue] of Object.entries(process.env)) {
-        if (!envValue) continue;
+        if (typeof envValue !== 'string' || !envValue) continue;
+        const envString = String(envValue);
 
         if (maskedKeywords.some((kw) => envKey.toLowerCase().includes(kw))) {
-            envVars[envKey] = maskString(envValue);
+            envVars[envKey] = maskString(envString);
         } else {
-            envVars[envKey] = envValue;
+            envVars[envKey] = envString;
         }
     }
 
@@ -88,11 +95,14 @@ export default async function SendDiagnosticsReport(ctx: AuthedCtx) {
     const rawTxActionLog = await txCore.logger.admin.getRecentBuffer();
     const txActionLog = (typeof rawTxActionLog !== 'string')
         ? 'error reading log file'
-        : maskIps(rawTxActionLog).split('\n').slice(-500).join('\n');
+        : maskIps(String(rawTxActionLog)).split('\n').slice(-500).join('\n');
 
     const serverLog = (txCore.logger.server.getRecentBuffer(500) as ServerLogType[])
         .map((l) => ({ ...l, msg: maskIps(l.msg) }));
-    const fxserverLog = maskIps(txCore.logger.fxserver.getRecentBuffer());
+    const rawFxserverLog = txCore.logger.fxserver.getRecentBuffer();
+    const fxserverLog = typeof rawFxserverLog === 'string'
+        ? maskIps(rawFxserverLog)
+        : 'error reading log file';
 
     //Getting server data content
     let serverDataContent: ServerDataContentType = [];
@@ -152,15 +162,15 @@ export default async function SendDiagnosticsReport(ctx: AuthedCtx) {
 
     //Making HTTP Request
     try {
-        type ResponseType = { reportId: string } | { error: string, message?: string };
-        const apiResp = await got.post(requestOptions).json() as ResponseType;
-        if ('reportId' in apiResp) {
-            reportIdCache.set(apiResp.reportId);
-            console.warn(`Diagnostics data report ID ${apiResp.reportId} sent by ${ctx.admin.name}`);
-            return sendTypedResp({ reportId: apiResp.reportId });
+        const apiResp = (await got.post(requestOptions).json()) as DiagnosticsApiResponse;
+        const reportId = apiResp.reportId ?? '';
+        if (reportId.length) {
+            reportIdCache.set(reportId);
+            console.warn(`Diagnostics data report ID ${reportId} sent by ${ctx.admin.name}`);
+            return sendTypedResp({ reportId });
         } else {
             console.verbose.dir(apiResp);
-            return sendTypedResp({ error: `Report failed: ${apiResp.message ?? apiResp.error}` });
+            return sendTypedResp({ error: `Report failed: ${apiResp.message ?? apiResp.error ?? 'Unknown error'}` });
         }
     } catch (error) {
         try {

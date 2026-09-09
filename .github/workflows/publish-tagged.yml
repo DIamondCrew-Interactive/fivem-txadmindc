@@ -3,7 +3,7 @@ name: Publish Tagged Build
 on:
   push:
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]+*"
+      - "v*"
 
 jobs:
   build:
@@ -34,17 +34,22 @@ jobs:
           echo TXDEV_FXSERVER_PATH=$(pwd)/fxserver > .env
           echo TXDEV_VITE_URL='http://localhost:40122' >> .env
 
+      - name: Typecheck workspaces
+        run: npm run typecheck --workspaces
+
       - name: Build project
         run: |
           npm run build
+          npm run release:prepare
           cat .github/.cienv >> $GITHUB_ENV
 
-      - name: Compress build output with zip
+      - name: Compress monitor runtime with zip
         run: |
-          cd dist
-          zip -r ../monitor.zip .
+          cd release
+          zip -r ../monitor.zip monitor
           cd ..
           sha256sum monitor.zip
+          unzip -l monitor.zip | head -200
 
       - name: Attest build provenance
         id: attest_build_provenance

@@ -6,7 +6,7 @@ import { numberToLocaleString } from "@/lib/utils";
 import { DiagnosticsInfoTree } from "./info-tree";
 import { DiagnosticsInfoList } from "./info-list";
 import { ReportDialog } from "./report-dialog";
-import type { DiagnosticsDataApiResp } from "@shared/diagnosticsTypes";
+import type { DiagnosticsDataApiResp, InfoTree } from "@shared/diagnosticsTypes";
 import useSWR from "swr";
 import { useBackendApi } from "@/hooks/fetch";
 import { useState } from "react";
@@ -80,7 +80,7 @@ export default function DiagnosticsPage() {
                             <CardTitle>txAdmin Runtime</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            {Object.entries(swr.data.runtime).map(([key, value]) => (
+                            {(Object.entries(swr.data.runtime) as [string, InfoTree][]).map(([key, value]) => (
                                 <DiagnosticsInfoTree key={key} title={key} tree={value} />
                             ))}
                         </CardContent>

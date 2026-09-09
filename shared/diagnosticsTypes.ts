@@ -1,4 +1,4 @@
-import type { GenericApiErrorResp } from "genericApiTypes";
+import type { GenericApiErrorResp } from "./genericApiTypes";
 
 export type InfoTree = {
     [key: string]: string | number | { [key: string]: string | number };

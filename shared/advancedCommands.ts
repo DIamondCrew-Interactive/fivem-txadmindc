@@ -1,10 +1,15 @@
 import type { GenericApiErrorResp } from "./genericApiTypes";
 
-export type {
-    RunAdvancedCommandResp,
-    RunAdvancedCommandRespSuccess,
-    RunAdvancedCommandReq,
-} from '@shared/advancedCommands';
+export type RunAdvancedCommandReq = {
+    cmd: string;
+};
+
+export type RunAdvancedCommandRespSuccess = {
+    type: 'md' | 'json';
+    data: string;
+};
+
+export type RunAdvancedCommandResp = RunAdvancedCommandRespSuccess | GenericApiErrorResp;
 
 
 type AdvancedCommand = {

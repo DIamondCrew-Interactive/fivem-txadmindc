@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { styled } from '@mui/material/styles';
-import { Box, Fade, Typography } from "@mui/material";
+import { Box, Fade, Typography, styled } from "@mui/material";
 import { useNuiEvent } from "../../hooks/useNuiEvent";
 import { useTranslate } from "react-polyglot";
 import { debugData } from "../../utils/debugData";

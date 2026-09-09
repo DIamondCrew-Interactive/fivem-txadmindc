@@ -10,7 +10,6 @@ import { HistoryActionModalResp, HistoryActionModalSuccess } from "@shared/histo
 import ActionIdsTab from "./ActionIdsTab";
 import ActionInfoTab from "./ActionInfoTab";
 import ActionModifyTab from "./ActionModifyTab";
-import ActionDeleteTab from "./ActionDeleteTab";
 import { ModalContent, ModalTabMessage, ModalTabsList, ModalTabWrapper, type ModalTabInfo } from "@/components/modal-tabs";
 
 
@@ -121,7 +120,7 @@ export default function ActionModal() {
                 Warned {displayName}
             </>;
         } else {
-            throw new Error(`Unknown action type: ${modalData.action.type}`);
+            throw new Error('Unknown action type.');
         }
     } else if (modalError) {
         pageTitle = <span className="text-destructive-inline">Error!</span>;

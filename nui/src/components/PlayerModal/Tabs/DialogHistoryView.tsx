@@ -153,14 +153,14 @@ const DialogHistoryView: React.FC = () => {
           data: { actionId },
         }
       );
-      if ("success" in result && result.success === true) {
+      if (result && "success" in result && result.success === true) {
         forceRefresh((val) => val + 1);
         enqueueSnackbar(t(`nui_menu.player_modal.history.revoked_success`), {
           variant: "success",
         });
       } else {
         enqueueSnackbar(
-          (result as GenericApiErrorResp).error ?? t("nui_menu.misc.unknown_error"),
+          (result && "error" in result) ? result.error : t("nui_menu.misc.unknown_error"),
           { variant: "error" }
         );
       }

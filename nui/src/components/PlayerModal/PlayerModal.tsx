@@ -7,8 +7,8 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  styled,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import {
   Block,
   Close,
@@ -84,15 +84,16 @@ const PlayerModal: React.FC<PlayerModalProps> = ({onClose}) => {
   const playerDetails = usePlayerDetailsValue();
   const assocPlayer = useAssociatedPlayerValue();
 
-  if (!assocPlayer) return null;
-
-  const error = (playerDetails as any).error;
+  const error = "error" in playerDetails ? playerDetails.error : undefined;
+  const displayName = "player" in playerDetails
+    ? playerDetails.player.displayName
+    : assocPlayer.displayName;
 
   return (
     <>
       <DialogTitle style={{ borderBottom: "1px solid rgba(221,221,221,0.54)" }}>
         [{assocPlayer.id}]{" "}
-        {playerDetails?.player?.displayName ?? assocPlayer.displayName}
+        {displayName}
         <StyledCloseButton onClick={onClose} size="large">
           <Close />
         </StyledCloseButton>

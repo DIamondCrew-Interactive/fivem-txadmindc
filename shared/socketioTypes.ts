@@ -19,7 +19,7 @@ export type GlobalStatusType = {
         uptime: number;
         health: FxMonitorHealth;
         healthReason: string;
-        whitelist: 'disabled' | 'adminOnly' | 'approvedLicense' | 'discordMember' | 'discordRoles';
+        whitelist: 'disabled' | 'adminOnly' | 'approvedLicense' | 'discordMember' | 'discordRoles' | 'external';
     };
     scheduler: {
         nextRelativeMs: number;
@@ -111,6 +111,7 @@ export type UpdateAvailableEventType = {
  * Listen Events Map
  */
 export type ListenEventsMap = {
+    connect: () => void;
     error: (reason?: string) => void;
     logout: (reason?: string) => void;
     refreshToUpdate: () => void;

@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"No tests for this workspace. Skipping...\"",
-        "typecheck": "tsc -p tsconfig.json --noEmit",
+        "typecheck": "cd .. && tsc -p tsconfig.typecheck.json --pretty false",
         "license:report": "npx license-report > ../.reports/license/shared.html"
     },
     "keywords": [],

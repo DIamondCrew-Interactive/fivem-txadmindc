@@ -12,53 +12,65 @@ import { PlayerData } from "../hooks/usePlayerListListener";
 import { PlayerModalResp, PlayerModalSuccess } from "@shared/playerApiTypes";
 import { GenericApiErrorResp } from "@shared/genericApiTypes";
 
-const playerDetails = {
-  selectedPlayerData: selector<PlayerModalResp | undefined>({
-    key: "selectedPlayerDetails",
-    get: async ({ get }) => {
-      get(playerDetails.forcePlayerRefresh);
-      const assocPlayer = get(playerDetails.associatedPlayer);
-      if (!assocPlayer) return;
-      const assocPlayerId = assocPlayer.id;
+const forcePlayerRefreshState = atom<number>({
+  key: "forcePlayerRefresh",
+  default: 0,
+});
 
-      const res: any = await fetchWebPipe<PlayerModalResp>(
-        `/player?mutex=current&netid=${assocPlayerId}`,
-        { mockData: MockedPlayerDetails }
-      );
-      debugLog("FetchWebPipe", res, "PlayerFetch");
+const associatedPlayerState = atom<PlayerData | null>({
+  key: "associatedPlayerDetails",
+  default: null,
+});
 
-      if (res.error) {
-        return { error: (res as GenericApiErrorResp).error };
-      } else if (res.player) {
-        const player = (res as PlayerModalSuccess).player;
-        if (player.isConnected) {
-          return res;
-        } else {
-          return { error: 'This player is no longer connected to the server.' };
-        }
-      }else{
-        return { error: 'Unknown error :(' };
+const selectedPlayerDataState = selector<PlayerModalResp | undefined>({
+  key: "selectedPlayerDetails",
+  get: async ({ get }) => {
+    get(forcePlayerRefreshState);
+    const assocPlayer = get(associatedPlayerState);
+    if (!assocPlayer) return;
+    const assocPlayerId = assocPlayer.id;
+
+    const res = await fetchWebPipe<PlayerModalResp>(
+      `/player?mutex=current&netid=${assocPlayerId}`,
+      { mockData: MockedPlayerDetails }
+    );
+    debugLog("FetchWebPipe", res, "PlayerFetch");
+
+    if (!res) {
+      return { error: 'Player details endpoint was not found.' };
+    } else if ("error" in res) {
+      return { error: (res as GenericApiErrorResp).error };
+    } else if ("player" in res) {
+      const player = (res as PlayerModalSuccess).player;
+      if (player.isConnected) {
+        return res;
+      } else {
+        return { error: 'This player is no longer connected to the server.' };
       }
-    },
-  }),
-  forcePlayerRefresh: atom({
-    key: "forcePlayerRefresh",
-    default: 0,
-  }),
-  associatedPlayer: atom<PlayerData | null>({
-    key: "associatedPlayerDetails",
-    default: null,
-  }),
+    }else{
+      return { error: 'Unknown error :(' };
+    }
+  },
+});
+
+export const usePlayerDetailsValue = () => {
+  const playerDetails = useRecoilValue<PlayerModalResp | undefined>(selectedPlayerDataState);
+  if (!playerDetails) {
+    throw new Error("No player details selected.");
+  }
+  return playerDetails;
 };
 
-export const usePlayerDetailsValue = () =>
-  useRecoilValue<PlayerModalResp>(playerDetails.selectedPlayerData);
-
 export const useForcePlayerRefresh = () =>
-  useSetRecoilState(playerDetails.forcePlayerRefresh);
+  useSetRecoilState(forcePlayerRefreshState);
 
-export const useAssociatedPlayerValue = () =>
-  useRecoilValue<PlayerData>(playerDetails.associatedPlayer);
+export const useAssociatedPlayerValue = () => {
+  const player = useRecoilValue<PlayerData | null>(associatedPlayerState);
+  if (!player) {
+    throw new Error("No associated player selected.");
+  }
+  return player;
+};
 
 export const useSetAssociatedPlayer = () =>
-  useSetRecoilState<PlayerData>(playerDetails.associatedPlayer);
+  useSetRecoilState<PlayerData | null>(associatedPlayerState);

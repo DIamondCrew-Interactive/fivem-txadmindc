@@ -21,8 +21,5 @@
     "include": [
         "**/*",
         "../locale/*.json"
-    ],
-    "references": [
-        { "path": "../core" }
     ]
 }
