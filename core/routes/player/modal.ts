@@ -78,6 +78,7 @@ export default async function PlayerModal(ctx: AuthedCtx) {
         playerData.playTime = playerDbData.playTime;
         playerData.tsWhitelisted = playerDbData.tsWhitelisted ? playerDbData.tsWhitelisted : undefined;
         playerData.tsLastConnection = playerDbData.tsLastConnection;
+        playerData.mugshot = playerDbData.mugshot;
 
         if (playerDbData.notes?.lastAdmin && playerDbData.notes?.tsLastEdit) {
             playerData.notes = playerDbData.notes.text;

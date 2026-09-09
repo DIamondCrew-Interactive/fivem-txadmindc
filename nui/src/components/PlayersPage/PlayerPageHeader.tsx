@@ -89,11 +89,18 @@ export const PlayerPageHeader: React.FC = () => {
       gap={3}
       flexWrap="wrap"
       pb={2}
-      sx={{
-        borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
-      }}
     >
-      <Box px={1}>
+      <Box
+        px={2}
+        py={1.25}
+        sx={{
+          borderRadius: 2,
+          background: "rgba(8, 13, 18, 0.58)",
+          border: "1px solid rgba(243, 211, 107, 0.18)",
+          backdropFilter: "blur(8px)",
+          boxShadow: "0 12px 30px rgba(0, 0, 0, 0.24)",
+        }}
+      >
         <TypographyTitle variant="h5" color="primary">
           {t("nui_menu.page_players.misc.online_players")}
         </TypographyTitle>
@@ -107,7 +114,16 @@ export const PlayerPageHeader: React.FC = () => {
         justifyContent="flex-end"
         gap={2}
         flexWrap="wrap"
-        sx={{ maxWidth: "66%" }}
+        sx={{
+          maxWidth: "66%",
+          px: 2,
+          py: 1,
+          borderRadius: 2,
+          background: "rgba(8, 13, 18, 0.58)",
+          border: "1px solid rgba(255, 255, 255, 0.08)",
+          backdropFilter: "blur(8px)",
+          boxShadow: "0 12px 30px rgba(0, 0, 0, 0.22)",
+        }}
       >
         <TextFieldInputs
           label={t("nui_menu.page_players.misc.search")}

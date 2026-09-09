@@ -36,6 +36,7 @@ export type PlayerModalPlayerData = {
     playTime?: number;
     notesLog?: string;
     notes?: string;
+    mugshot?: string;
     tsLastConnection?: number; //only show if offline
 }
 

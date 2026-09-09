@@ -110,6 +110,27 @@ function PlayerNotesBox({ playerRef, player, refreshModalData }: PlayerNotesBoxP
     </>
 }
 
+function PlayerMugshot({ player }: { player: PlayerModalPlayerData }) {
+    if (!player.mugshot) return null;
+
+    return (
+        <div className="mb-3 flex items-center gap-4 rounded-lg border border-border/80 bg-card/60 p-3 shadow-sm">
+            <img
+                src={player.mugshot}
+                alt=""
+                className="h-28 w-28 rounded-md border border-warning/45 object-cover shadow-lg"
+            />
+            <div className="min-w-0">
+                <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Mugshot</div>
+                <div className="truncate text-lg font-bold text-foreground">{player.displayName}</div>
+                <div className="text-sm text-muted-foreground">
+                    {player.isConnected ? 'Live cached player portrait' : 'Last cached player portrait'}
+                </div>
+            </div>
+        </div>
+    );
+}
+
 
 type PlayerInfoTabProps = {
     playerRef: PlayerModalRefType;
@@ -209,6 +230,7 @@ export default function PlayerInfoTab({ playerRef, player, serverTime, tsFetch, 
                     </div>
                 </div>
             ) : null}
+            <PlayerMugshot player={player} />
             <dl className="pb-2">
                 {player.isConnected && <div className="py-0.5 grid grid-cols-3 gap-4 px-0">
                     <dt className="text-sm font-medium leading-6 text-muted-foreground">Session Time</dt>
