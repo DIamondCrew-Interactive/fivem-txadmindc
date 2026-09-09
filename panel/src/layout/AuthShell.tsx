@@ -5,10 +5,8 @@ import AddMasterPin from "../pages/auth/AddMasterPin";
 import AddMasterCallback from "../pages/auth/AddMasterCallback";
 import { Card } from "../components/ui/card";
 import { DiamondCircleLogo } from "@/components/Logos";
-import { useThemedImage } from "@/hooks/theme";
 import { handleExternalLinkClick } from "@/lib/navigation";
 import { AuthError } from "@/pages/auth/errors";
-import { useState } from "react";
 import { FaDiscord } from "react-icons/fa";
 
 function AuthContentWrapper({ children }: { children: React.ReactNode }) {
@@ -21,28 +19,16 @@ function AuthContentWrapper({ children }: { children: React.ReactNode }) {
 
 
 export default function AuthShell() {
-    const customLogoUrl = useThemedImage(window.txConsts.providerLogo);
-    const [customLogoFailed, setCustomLogoFailed] = useState(false);
-    const showCustomLogo = customLogoUrl && !customLogoFailed;
     return (
         <div className="min-h-screen flex items-center justify-center pattern-dots">
             <div className="w-full min-w-[20rem] xs:max-w-[25rem] my-4 xs:mx-4">
-                {showCustomLogo ? (
-                    <img
-                        className='max-w-36 xs:max-w-56 max-h-16 xs:max-h-24 m-auto'
-                        src={customLogoUrl}
-                        alt={window.txConsts.providerName}
-                        onError={() => setCustomLogoFailed(true)}
-                    />
-                ) : (
-                    <div className="flex flex-col items-center gap-2">
-                        <DiamondCircleLogo className="w-24 h-24 xs:w-28 xs:h-28" />
-                        <span className="flex flex-col leading-none font-black text-transparent bg-clip-text bg-gradient-to-r from-[#2ec7ff] via-[#f43cb2] to-[#f3d36b]">
-                            <span className="text-2xl">DiamondCrew</span>
-                            <span className="text-lg">Interactive</span>
-                        </span>
-                    </div>
-                )}
+                <div className="flex flex-col items-center gap-2">
+                    <DiamondCircleLogo className="w-24 h-24 xs:w-28 xs:h-28 object-contain" />
+                    <span className="flex flex-col leading-none font-black text-transparent bg-clip-text bg-gradient-to-r from-[#2ec7ff] via-[#f43cb2] to-[#f3d36b]">
+                        <span className="text-2xl">DiamondCrew</span>
+                        <span className="text-lg">Interactive</span>
+                    </span>
+                </div>
 
                 <Card className="min-h-80 mt-4 xs:mt-8 mb-4 flex items-center justify-center bg-card/40 rounded-none xs:rounded-lg">
                     <Switch>

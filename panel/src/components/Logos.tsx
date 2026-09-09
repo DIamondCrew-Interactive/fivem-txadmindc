@@ -1,4 +1,5 @@
 import { useId } from "react";
+import diamondCircleLogoUrl from "@/assets/diamond-circle-logo.png";
 
 type LogoProps = {
     className?: string;
@@ -9,7 +10,7 @@ export function DiamondCircleLogo({ style, className }: LogoProps) {
     return <img
         className={className}
         style={style}
-        src="/images/diamond-circle-logo.png?v=diamondcrew-2"
+        src={diamondCircleLogoUrl}
         alt="DiamondCrew Interactive"
     />;
 }
