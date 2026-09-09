@@ -1,26 +1,6 @@
-<p align="center">
-    <p align="center">
-        <img src="docs/banner.png">
-    </p>
-    <p align="center">
-        In 2019 <b>txAdmin</b> was created, with the objective of making FiveM server management accessible to everyone – no matter their skill level! <br/>
-        Today, <b>txAdmin</b> is <i>the</i> <b>full featured</b> web panel & in-game menu to Manage & Monitor your FiveM/RedM Server, in use by over <strong>29.000</strong> servers worldwide at any given time!
-    </p>
-    <p align="center">
-        Join our Discord Server: &nbsp; <a href="https://discord.gg/AFAAXzq"><img src="https://discordapp.com/api/guilds/577993482761928734/widget.png?style=shield"></img></a>
-    </p>
-    <p align="center">
-        <a href="https://zap-hosting.com/txadmin4" target="_blank" rel="noopener">
-            <img src="docs/zaphosting.png" alt="zap-hosting"></img>
-        </a>
-    </p>
-</p>
-
 # DiamondCrew Interactive txAdmin
 
 Custom DiamondCrew Interactive build of txAdmin for FiveM/RedM server management, with a redesigned web panel, redesigned in-game menu identity, PNG DiamondCrew branding, Czech/English panel toggle, gksphone announcements, GTA-style notification support, and player mugshot caching.
-
-Credits: this project is based on the official [txAdmin](https://github.com/tabarra/txAdmin) by Tabarra and the txAdmin contributors. DiamondCrew Interactive customizations are layered on top of txAdmin; upstream txAdmin ownership, licensing, and original project credit remain with their respective authors.
 
 ## Main Features
 - Recipe-based Server Deployer: create a server in under 60 seconds! ([docs/recipe.md](docs/recipe.md))
@@ -85,6 +65,7 @@ Also, check our [Feature Graveyard](docs/feature-graveyard.md) for the features 
 
 
 ## License, Credits and Thanks
+- DiamondCrew Interactive customization is based on the official [txAdmin](https://github.com/tabarra/txAdmin) project by Tabarra and the txAdmin contributors. Upstream txAdmin ownership, licensing, and original project credit remain with their respective authors.
 - This project is licensed under the [MIT License](https://github.com/tabarra/txAdmin/blob/master/LICENSE);
 - ["Kick" button icons](https://www.flaticon.com/free-icon/users-avatar_8188385) made by __SeyfDesigner__ from [www.flaticon.com](https://www.flaticon.com);
 - Warning Sounds ([1](https://freesound.org/people/Ultranova105/sounds/136756/)/[2](https://freesound.org/people/Ultranova105/sounds/136754/)) made by __Ultranova105__ are licensed under [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/);
