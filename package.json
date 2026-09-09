@@ -1,7 +1,7 @@
 {
   "name": "txadmin",
   "version": "1.0.0",
-  "description": "The official FiveM/RedM server management platform used by tens of thousands of servers.",
+  "description": "DiamondCrew Interactive custom txAdmin build for FiveM/RedM, based on the official txAdmin by Tabarra and contributors.",
   "module": "./core/index.js",
   "type": "module",
   "workspaces": [
