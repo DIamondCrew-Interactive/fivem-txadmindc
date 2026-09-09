@@ -120,7 +120,7 @@ function AuthedHeaderFragment() {
         setAccountModalOpen(true);
     }
     const gotoSupportDiscord = () => {
-        openExternalLink('https://discord.gg/uAmsGa2');
+        openExternalLink('https://discord.gg/Ec5hPDunWh');
     }
     const doLogout = () => logout();
 

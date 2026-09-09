@@ -55,10 +55,10 @@ export default function DiagnosticsPage() {
                             To receive support, it is recommended that you send the diagnostics data directly to the
                             Support Team. <br />
                             After that, share the report ID with the support team in <TxAnchor
-                                href="https://discord.gg/uAmsGa2"
+                                href="https://discord.gg/Ec5hPDunWh"
                                 className="font-semibold tracking-wide text-primary"
                             >
-                                discord.gg/txAdmin
+                                discord.gg/Ec5hPDunWh
                             </TxAnchor>.
                         </p>
                         <Button

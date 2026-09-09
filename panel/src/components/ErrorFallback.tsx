@@ -111,8 +111,8 @@ export function GenericErrorBoundaryCard(props: GenericErrorBoundaryCardProps) {
                     variant="outline"
                     className="bg-discord hover:bg-discord-active animate-pulse hover:animate-none"
                 >
-                    <a href="http://discord.gg/txAdmin" target="_blank" rel="noopener noreferrer">
-                        Support Discord
+                    <a href="https://discord.gg/Ec5hPDunWh" target="_blank" rel="noopener noreferrer">
+                        Podpora Discord
                     </a>
                 </Button>
             </CardFooter>

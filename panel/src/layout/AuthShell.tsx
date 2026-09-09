@@ -8,6 +8,8 @@ import { DiamondCircleLogo } from "@/components/Logos";
 import { useThemedImage } from "@/hooks/theme";
 import { handleExternalLinkClick } from "@/lib/navigation";
 import { AuthError } from "@/pages/auth/errors";
+import { useState } from "react";
+import { FaDiscord } from "react-icons/fa";
 
 function AuthContentWrapper({ children }: { children: React.ReactNode }) {
     return (
@@ -20,14 +22,17 @@ function AuthContentWrapper({ children }: { children: React.ReactNode }) {
 
 export default function AuthShell() {
     const customLogoUrl = useThemedImage(window.txConsts.providerLogo);
+    const [customLogoFailed, setCustomLogoFailed] = useState(false);
+    const showCustomLogo = customLogoUrl && !customLogoFailed;
     return (
         <div className="min-h-screen flex items-center justify-center pattern-dots">
             <div className="w-full min-w-[20rem] xs:max-w-[25rem] my-4 xs:mx-4">
-                {customLogoUrl ? (
+                {showCustomLogo ? (
                     <img
                         className='max-w-36 xs:max-w-56 max-h-16 xs:max-h-24 m-auto'
                         src={customLogoUrl}
                         alt={window.txConsts.providerName}
+                        onError={() => setCustomLogoFailed(true)}
                     />
                 ) : (
                     <div className="flex flex-col items-center gap-2">
@@ -74,19 +79,19 @@ export default function AuthShell() {
 
                 <div className="mx-auto flex flex-wrap gap-4 justify-center mb-2">
                     <a
-                        href='https://discord.gg/uAmsGa2'
+                        href='https://discord.gg/Ec5hPDunWh'
                         onClick={handleExternalLinkClick}
                         target='_blank'
-                        className='w-48 h-16 relative group shadow-sm opacity-90 hover:opacity-100 brightness-110
-                        dark:brightness-95 dark:hover:brightness-110'
+                        rel="noopener noreferrer"
+                        className='h-16 px-5 relative group shadow-sm opacity-90 hover:opacity-100
+                        flex items-center justify-center gap-3 rounded-lg
+                        bg-gradient-to-r from-[#2ec7ff] via-[#f43cb2] to-[#f3d36b]
+                        text-black font-semibold transition-transform hover:scale-[1.02]'
                     >
                         <div className='absolute inset-0 -z-10 animate-pulse blur 
-                        scale-0 group-hover:scale-100 transition-transform bg-black
-                        dark:bg-gradient-to-t dark:from-[#8567EC] dark:to-[#BD5CBF]' />
-                        <img
-                            className='rounded-lg max-w-48 max-h-16 m-auto'
-                            src="img/discord.png"
-                        />
+                        scale-0 group-hover:scale-100 transition-transform bg-[#f43cb2]' />
+                        <FaDiscord className="h-7 w-7" />
+                        Připojit Discord
                     </a>
                 </div>
 

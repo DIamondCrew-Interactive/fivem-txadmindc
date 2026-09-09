@@ -1,0 +1,124 @@
+{
+    "_comment":  "DiamondCrew Interactive custom FiveM egg with DiamondCrew txAdmin monitor replacement.",
+    "meta":  {
+                 "version":  "PTDL_v2",
+                 "update_url":  null
+             },
+    "exported_at":  "2026-09-09T00:00:00+02:00",
+    "name":  "DiamondCrew FiveM txAdmin",
+    "author":  "development@diamondcrew.net",
+    "description":  "FiveM FXServer egg that installs the Linux artifact and replaces alpine/opt/cfx-server/citizen/system_resources/monitor with the DiamondCrew Interactive txAdmin release.",
+    "features":  null,
+    "docker_images":  {
+                          "ghcr.io/parkervcp/yolks:debian":  "ghcr.io/parkervcp/yolks:debian"
+                      },
+    "file_denylist":  [
+
+                      ],
+    "startup":  "if [ \"{{TXADMIN_ENABLED}}\" = \"false\" ] || [ \"{{TXADMIN_ENABLED}}\" = \"0\" ]; then cd /home/container \u0026\u0026 exec /home/container/alpine/opt/cfx-server/ld-musl-x86_64.so.1 --library-path \"/home/container/alpine/usr/lib/v8/:/home/container/alpine/lib/:/home/container/alpine/usr/lib/\" -- /home/container/alpine/opt/cfx-server/FXServer +exec server-data/server.cfg; else cd /home/container \u0026\u0026 TXHOST_DATA_PATH=/home/container/txData TXHOST_GAME_NAME=fivem TXHOST_TXA_PORT={{TXADMIN_PORT}} TXHOST_FXS_PORT={{SERVER_PORT}} TXHOST_INTERFACE=0.0.0.0 TXHOST_MAX_SLOTS={{SERVER_MAX_PLAYERS}} TXHOST_TXA_URL=\"{{TXADMIN_PUBLIC_URL}}\" TXHOST_DEFAULT_CFXKEY=\"{{FIVEM_LICENSE_KEY}}\" exec /home/container/alpine/opt/cfx-server/ld-musl-x86_64.so.1 --library-path \"/home/container/alpine/usr/lib/v8/:/home/container/alpine/lib/:/home/container/alpine/usr/lib/\" -- /home/container/alpine/opt/cfx-server/FXServer; fi",
+    "config":  {
+                   "files":  "{}",
+                   "startup":  "{\r\n  \"done\": \"Started resource monitor\"\r\n}",
+                   "logs":  "{}",
+                   "stop":  "quit"
+               },
+    "scripts":  {
+                    "installation":  {
+                                         "script":  "#!/bin/bash\nset -Eeuo pipefail\n\nfail() {\n    echo \"[DiamondCrew installer] ERROR: $*\" \u003e\u00262\n    exit 1\n}\n\ninfo() {\n    echo \"[DiamondCrew installer] $*\" \u003e\u00262\n}\n\nneed_cmd() {\n    command -v \"$1\" \u003e/dev/null 2\u003e\u00261 || fail \"Missing required command: $1\"\n}\n\nSERVER_DIR=\"/mnt/server\"\nARTIFACT_INDEX=\"https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/\"\nTXADMIN_REPO=\"https://github.com/DIamondCrew-Interactive/fivem-txadmindc\"\nTXADMIN_VERSION=\"${TXADMIN_VERSION:-v1.0.0}\"\nTXADMIN_SHA256=\"${TXADMIN_SHA256:-935871ceed3ef90442e4e60f302b0dfb76e2e5be0c9ec5f649597e5328df8f88}\"\nTXADMIN_URL=\"${TXADMIN_REPO}/releases/download/${TXADMIN_VERSION}/monitor.zip\"\nCFX_DIR=\"${SERVER_DIR}/alpine/opt/cfx-server\"\nMONITOR_DIR=\"${CFX_DIR}/citizen/system_resources/monitor\"\nMONITOR_BACKUP_DIR=\"${CFX_DIR}/citizen/system_resources/monitor.stock\"\n\nmkdir -p \"${SERVER_DIR}\"\ncd \"${SERVER_DIR}\"\n\ninfo \"Installing required tools\"\napt-get update\napt-get install -y ca-certificates curl grep sed tar unzip xz-utils\n\nneed_cmd curl\nneed_cmd grep\nneed_cmd sed\nneed_cmd tar\nneed_cmd unzip\nneed_cmd sha256sum\n\nTMP_DIR=\"$(mktemp -d)\"\ntrap \u0027rm -rf \"${TMP_DIR}\"\u0027 EXIT\n\nresolve_artifact_url() {\n    local configured=\"${FXSERVER_ARTIFACT_URL:-latest}\"\n\n    if [ -n \"${configured}\" ] \u0026\u0026 [ \"${configured}\" != \"latest\" ]; then\n        printf \u0027%s\\n\u0027 \"${configured}\"\n        return 0\n    fi\n\n    info \"Resolving latest Linux FXServer artifact\"\n    local page rel\n    page=\"$(curl -fsSL --retry 3 --connect-timeout 20 \"${ARTIFACT_INDEX}\")\" \\\n        || fail \"Could not read FXServer artifact index\"\n\n    rel=\"$(printf \u0027%s\u0027 \"${page}\" \\\n        | grep -Eo \u0027href=\"[0-9]+-[^\"]+/fx.tar.xz\"\u0027 \\\n        | sed -E \u0027s/^href=\"//; s/\"$//\u0027 \\\n        | head -n 1)\"\n\n    [ -n \"${rel}\" ] || fail \"Could not find fx.tar.xz in FXServer artifact index\"\n    printf \u0027%s%s\\n\u0027 \"${ARTIFACT_INDEX}\" \"${rel}\"\n}\n\nARTIFACT_URL=\"$(resolve_artifact_url)\"\ninfo \"Downloading Linux FXServer artifact: ${ARTIFACT_URL}\"\ncurl -fL --retry 3 --connect-timeout 30 \"${ARTIFACT_URL}\" -o \"${TMP_DIR}/fxserver.tar.xz\" \\\n    || fail \"FXServer artifact download failed\"\n\ninfo \"Extracting FXServer into ${SERVER_DIR}\"\ntar -xJf \"${TMP_DIR}/fxserver.tar.xz\" -C \"${SERVER_DIR}\" \\\n    || fail \"FXServer artifact extraction failed\"\n\n[ -f \"${CFX_DIR}/FXServer\" ] \\\n    || fail \"FXServer artifact did not create alpine/opt/cfx-server/FXServer\"\n\n[ -d \"${CFX_DIR}/citizen/system_resources\" ] \\\n    || fail \"FXServer artifact did not create alpine/opt/cfx-server/citizen/system_resources\"\n\nif [ -d \"${MONITOR_DIR}\" ]; then\n    if [ ! -d \"${MONITOR_BACKUP_DIR}\" ]; then\n        info \"Backing up stock monitor to alpine/opt/cfx-server/citizen/system_resources/monitor.stock\"\n        cp -a \"${MONITOR_DIR}\" \"${MONITOR_BACKUP_DIR}\" \\\n            || fail \"Could not back up stock monitor\"\n    else\n        info \"Stock monitor backup already exists; keeping it\"\n    fi\n\n    case \"${MONITOR_DIR}\" in\n        \"${CFX_DIR}/citizen/system_resources/monitor\")\n            rm -rf \"${MONITOR_DIR}\"\n            ;;\n        *)\n            fail \"Refusing to remove unexpected monitor path: ${MONITOR_DIR}\"\n            ;;\n    esac\nelse\n    info \"Stock monitor directory was not present; continuing\"\nfi\n\ninfo \"Downloading DiamondCrew txAdmin ${TXADMIN_VERSION}: ${TXADMIN_URL}\"\ncurl -fL --retry 3 --connect-timeout 30 \"${TXADMIN_URL}\" -o \"${TMP_DIR}/monitor.zip\" \\\n    || fail \"DiamondCrew txAdmin monitor.zip download failed\"\n\ninfo \"Verifying DiamondCrew txAdmin SHA256\"\nprintf \u0027%s  %s\\n\u0027 \"${TXADMIN_SHA256}\" \"${TMP_DIR}/monitor.zip\" | sha256sum -c - \\\n    || fail \"DiamondCrew txAdmin SHA256 mismatch\"\n\ninfo \"Extracting DiamondCrew txAdmin monitor\"\nmkdir -p \"${TMP_DIR}/monitor-extract\"\nunzip -q \"${TMP_DIR}/monitor.zip\" -d \"${TMP_DIR}/monitor-extract\" \\\n    || fail \"DiamondCrew txAdmin ZIP extraction failed\"\n\n[ -d \"${TMP_DIR}/monitor-extract/monitor\" ] \\\n    || fail \"DiamondCrew txAdmin ZIP must contain top-level monitor directory\"\n\ncp -a \"${TMP_DIR}/monitor-extract/monitor\" \"${MONITOR_DIR}\" \\\n    || fail \"Could not install DiamondCrew monitor directory\"\n\nfor required in \\\n    entrypoint.js \\\n    fxmanifest.lua \\\n    core/index.js \\\n    panel/index.html \\\n    nui/index.html \\\n    panel/images/diamond-circle-logo.png \\\n    nui/images/diamond-circle-logo.png \\\n    diamondcrew-build.json\ndo\n    [ -e \"${MONITOR_DIR}/${required}\" ] || fail \"Installed monitor is missing ${required}\"\ndone\n\nmkdir -p \"${SERVER_DIR}/txData\" \"${SERVER_DIR}/server-data\"\n\ninfo \"Install complete\"\ninfo \"FXServer is installed in ${SERVER_DIR}\"\ninfo \"DiamondCrew txAdmin monitor is installed in alpine/opt/cfx-server/citizen/system_resources/monitor\"\ninfo \"txData and server-data directories exist and were not removed\"",
+                                         "container":  "ghcr.io/parkervcp/installers:debian",
+                                         "entrypoint":  "bash"
+                                     }
+                },
+    "variables":  [
+                      {
+                          "name":  "FiveM License Key",
+                          "description":  "FiveM license key mapped to TXHOST_DEFAULT_CFXKEY for txAdmin deployer prefill. Do not commit real keys.",
+                          "env_variable":  "FIVEM_LICENSE_KEY",
+                          "default_value":  "",
+                          "user_viewable":  true,
+                          "user_editable":  true,
+                          "rules":  "nullable|string|max:128",
+                          "field_type":  "text"
+                      },
+                      {
+                          "name":  "txAdmin Port",
+                          "description":  "Port exposed for the txAdmin web panel. This must be added as a Pterodactyl allocation.",
+                          "env_variable":  "TXADMIN_PORT",
+                          "default_value":  "33031",
+                          "user_viewable":  true,
+                          "user_editable":  true,
+                          "rules":  "required|integer|between:1024,65535",
+                          "field_type":  "text"
+                      },
+                      {
+                          "name":  "txAdmin Public URL",
+                          "description":  "Public URL used by txAdmin host mode for generated panel links and callbacks.",
+                          "env_variable":  "TXADMIN_PUBLIC_URL",
+                          "default_value":  "",
+                          "user_viewable":  true,
+                          "user_editable":  true,
+                          "rules":  "nullable|string|max:256",
+                          "field_type":  "text"
+                      },
+                      {
+                          "name":  "FXServer Artifact URL",
+                          "description":  "Direct Linux FXServer fx.tar.xz URL, or latest to resolve the newest master artifact during install.",
+                          "env_variable":  "FXSERVER_ARTIFACT_URL",
+                          "default_value":  "latest",
+                          "user_viewable":  true,
+                          "user_editable":  true,
+                          "rules":  "required|string|max:512",
+                          "field_type":  "text"
+                      },
+                      {
+                          "name":  "Server Max Players",
+                          "description":  "Default max players value used when txAdmin is disabled and FXServer starts directly.",
+                          "env_variable":  "SERVER_MAX_PLAYERS",
+                          "default_value":  "48",
+                          "user_viewable":  true,
+                          "user_editable":  true,
+                          "rules":  "required|integer|between:1,2048",
+                          "field_type":  "text"
+                      },
+                      {
+                          "name":  "Server Name",
+                          "description":  "Server display name for startup metadata and first deployment documentation.",
+                          "env_variable":  "SERVER_NAME",
+                          "default_value":  "DiamondCrew FiveM",
+                          "user_viewable":  true,
+                          "user_editable":  true,
+                          "rules":  "required|string|max:64",
+                          "field_type":  "text"
+                      },
+                      {
+                          "name":  "txAdmin Enabled",
+                          "description":  "Keep true for DiamondCrew txAdmin. If false, startup bypasses txAdmin and runs FXServer directly.",
+                          "env_variable":  "TXADMIN_ENABLED",
+                          "default_value":  "true",
+                          "user_viewable":  true,
+                          "user_editable":  true,
+                          "rules":  "required|string|in:true,false,1,0",
+                          "field_type":  "text"
+                      },
+                      {
+                          "name":  "DiamondCrew txAdmin Version",
+                          "description":  "GitHub Release tag used to download monitor.zip.",
+                          "env_variable":  "TXADMIN_VERSION",
+                          "default_value":  "v1.0.0",
+                          "user_viewable":  true,
+                          "user_editable":  true,
+                          "rules":  "required|string|max:64",
+                          "field_type":  "text"
+                      },
+                      {
+                          "name":  "DiamondCrew txAdmin SHA256",
+                          "description":  "Expected SHA256 for monitor.zip. Update this when TXADMIN_VERSION changes.",
+                          "env_variable":  "TXADMIN_SHA256",
+                          "default_value":  "935871ceed3ef90442e4e60f302b0dfb76e2e5be0c9ec5f649597e5328df8f88",
+                          "user_viewable":  true,
+                          "user_editable":  true,
+                          "rules":  "required|string|size:64",
+                          "field_type":  "text"
+                      }
+                  ]
+}
