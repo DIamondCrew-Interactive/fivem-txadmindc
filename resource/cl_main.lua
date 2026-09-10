@@ -76,6 +76,26 @@ local function requestNotificationPicture(textureDict)
         Wait(0)
     end
 end
+local function tryBulletinAnnouncement(message, author, picture)
+    if not IS_FIVEM or GetResourceState('bulletin') ~= 'started' then
+        return false
+    end
+
+    local ok = pcall(function()
+        exports['bulletin']:SendAdvanced({
+            message = message or '',
+            title = author or 'Server',
+            subject = 'Oznameni serveru',
+            icon = picture,
+            timeout = 5000,
+            position = 'bottomright',
+            progress = true,
+            theme = 'default',
+            flash = false,
+        })
+    end)
+    return ok
+end
 RegisterNetEvent('txcl:showGksphoneAnnouncement', function(message, author, color, logo, phoneType)
     playAnnouncementSound()
     local notifData = {
@@ -116,6 +136,10 @@ RegisterNetEvent('txcl:showGtaoAnnouncement', function(message, author, color, l
     end
 
     local picture = getGtaNotificationPicture(logo)
+    if tryBulletinAnnouncement(message, author, picture) then
+        return
+    end
+
     requestNotificationPicture(picture)
     BeginTextCommandThefeedPost('STRING')
     AddTextComponentSubstringPlayerName(message or '')
