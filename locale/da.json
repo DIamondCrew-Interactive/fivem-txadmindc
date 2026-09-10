@@ -207,7 +207,9 @@
                 "mode_gksphone": "gksphone",
                 "mode_gksphone_label": "Send a gksphone notification to all players.",
                 "mode_gta": "GTA",
-                "mode_gta_label": "Show the classic GTA notification above the minimap."
+                "mode_gta_label": "Show the classic GTA notification above the minimap.",
+                "mode_gtao": "GTA:O",
+                "mode_gtao_label": "Show a GTA Online style notification with the server icon."
             },
             "clear_area": {
                 "title": "Nulstil verdensområde",

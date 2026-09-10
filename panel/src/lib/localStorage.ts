@@ -36,6 +36,8 @@ export enum LocalStorageKey {
     PlayersPageSearchType = 'txa:playersPage:searchType',
     AuthCredsAutofill = 'txa:authCreds:autofill',
     PanelLanguage = 'txa:panel:language',
+    AnnouncementTitle = 'txa:announcement:title',
+    AnnouncementLogo = 'txa:announcement:logo',
 
     // atomWithStorage
     LiveConsoleBookmarks = 'txa:liveConsole:bookmarks',

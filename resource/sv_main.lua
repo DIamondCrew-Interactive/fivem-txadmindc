@@ -166,6 +166,26 @@ local cvHideAnnouncement = GetConvarBool('txAdmin-hideDefaultAnnouncement')
 local cvHideDirectMessage = GetConvarBool('txAdmin-hideDefaultDirectMessage')
 local cvHideWarning = GetConvarBool('txAdmin-hideDefaultWarning')
 local cvHideScheduledRestartWarning = GetConvarBool('txAdmin-hideDefaultScheduledRestartWarning')
+local function getAnnouncementTitle(eventData)
+    local customTitle = GetConvar('txAdmin-announcementTitle', '')
+    if type(eventData.title) == 'string' and eventData.title ~= '' then
+        return eventData.title
+    elseif customTitle ~= '' then
+        return customTitle
+    elseif cvHideAdminInMessages then
+        return txServerName
+    end
+    return txServerName
+end
+
+local function getAnnouncementLogo(eventData)
+    if type(eventData.logo) == 'string' and eventData.logo ~= '' then
+        return eventData.logo
+    end
+    local customLogo = GetConvar('txAdmin-announcementLogo', '')
+    return customLogo ~= '' and customLogo or nil
+end
+
 -- Adding all known events to the list so txaEvent can do whitelist checking
 TX_EVENT_HANDLERS = {
     -- Handled by another file
@@ -195,15 +215,17 @@ end
 --- Handler for announcement events
 --- Broadcast admin message to all players
 TX_EVENT_HANDLERS.announcement = function(eventData)
-    local authorName = cvHideAdminInMessages and txServerName or eventData.author or 'anonym'
+    local authorName = getAnnouncementTitle(eventData)
     local mode = eventData.mode or 'server'
-    eventData.logo = eventData.logo or 'images/diamond-circle-logo.png'
+    eventData.logo = getAnnouncementLogo(eventData)
     eventData.phoneType = eventData.phoneType or 'success'
     if mode == 'gksphone' or mode == 'gcphone' then
         TriggerEvent('txAdmin:events:gksphoneAnnouncement', eventData)
         TriggerClientEvent('txcl:showGksphoneAnnouncement', -1, eventData.message, authorName, eventData.color, eventData.logo, eventData.phoneType)
     elseif mode == 'gta' then
         TriggerClientEvent('txcl:showGtaAnnouncement', -1, eventData.message, authorName, eventData.color, eventData.logo)
+    elseif mode == 'gtao' then
+        TriggerClientEvent('txcl:showGtaoAnnouncement', -1, eventData.message, authorName, eventData.color, eventData.logo)
     elseif not cvHideAnnouncement then
         TriggerClientEvent('txcl:showAnnouncement', -1, eventData.message, authorName, eventData.color, eventData.logo)
     end

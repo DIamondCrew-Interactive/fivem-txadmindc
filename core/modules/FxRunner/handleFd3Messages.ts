@@ -29,6 +29,7 @@ const handleBridgedCommands = (payload: any) => {
             let announcementPayload: {
                 mode?: string;
                 message: string;
+                title?: string;
                 color?: string;
                 logo?: string;
                 phoneType?: string;
@@ -38,6 +39,7 @@ const handleBridgedCommands = (payload: any) => {
                 announcementPayload = {
                     mode: typeof parsedPayload.mode === 'string' ? parsedPayload.mode : 'server',
                     message: typeof parsedPayload.message === 'string' ? parsedPayload.message.trim() : '',
+                    title: typeof parsedPayload.title === 'string' ? parsedPayload.title.trim() : undefined,
                     color: typeof parsedPayload.color === 'string' ? parsedPayload.color : undefined,
                     logo: typeof parsedPayload.logo === 'string' ? parsedPayload.logo : undefined,
                     phoneType: typeof parsedPayload.phoneType === 'string' ? parsedPayload.phoneType : undefined,

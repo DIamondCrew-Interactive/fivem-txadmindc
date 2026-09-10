@@ -16,15 +16,17 @@ import { ApiTimeout, useBackendApi } from '@/hooks/fetch';
 import { useCloseAllSheets } from '@/hooks/sheets';
 import { useAdminPerms } from '@/hooks/auth';
 import { usePanelLocale } from '@/hooks/panelLocale';
+import { LocalStorageKey } from '@/lib/localStorage';
 import { TxConfigState } from '@shared/enums';
 import { useState, type FormEvent } from 'react';
 
-type AnnouncementMode = 'server' | 'gksphone' | 'gta';
+type AnnouncementMode = 'server' | 'gksphone' | 'gta' | 'gtao';
 type PhoneNotificationType = 'success' | 'info' | 'warning' | 'error';
 
 type AnnouncementPayload = {
     mode: AnnouncementMode;
     message: string;
+    title: string;
     color: string;
     logo: string;
     phoneType: PhoneNotificationType;
@@ -65,11 +67,25 @@ function AnnouncementDialog({
     onSubmit: (payload: AnnouncementPayload) => void;
 }) {
     const { t } = usePanelLocale();
+    const getStoredValue = (key: LocalStorageKey) => {
+        try {
+            return localStorage.getItem(key) ?? '';
+        } catch {
+            return '';
+        }
+    };
     const [mode, setMode] = useState<AnnouncementMode>('server');
     const [message, setMessage] = useState('');
+    const [title, setTitle] = useState(getStoredValue(LocalStorageKey.AnnouncementTitle));
     const [color, setColor] = useState('#F43CB2');
-    const [logo, setLogo] = useState('images/diamond-circle-logo.png');
+    const [logo, setLogo] = useState(getStoredValue(LocalStorageKey.AnnouncementLogo));
     const [phoneType, setPhoneType] = useState<PhoneNotificationType>('success');
+    const saveDefaults = () => {
+        try {
+            localStorage.setItem(LocalStorageKey.AnnouncementTitle, title.trim());
+            localStorage.setItem(LocalStorageKey.AnnouncementLogo, logo.trim());
+        } catch { }
+    };
 
     const submit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -78,8 +94,9 @@ function AnnouncementDialog({
         onSubmit({
             mode,
             message: cleanMessage,
+            title: title.trim(),
             color,
-            logo,
+            logo: logo.trim(),
             phoneType,
         });
         setMessage('');
@@ -108,6 +125,7 @@ function AnnouncementDialog({
                                         <SelectItem value="server">{t.serverAnnouncement}</SelectItem>
                                         <SelectItem value="gksphone">{t.gksphoneNotification}</SelectItem>
                                         <SelectItem value="gta">{t.gtaNotification}</SelectItem>
+                                        <SelectItem value="gtao">{t.gtaoNotification}</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -128,6 +146,15 @@ function AnnouncementDialog({
 
                             {canCustomize && (
                                 <div className="grid gap-4 sm:grid-cols-[9rem_1fr]">
+                                    <div className="grid gap-2 sm:col-span-2">
+                                        <Label htmlFor="announcement-title">{t.notificationTitle}</Label>
+                                        <Input
+                                            id="announcement-title"
+                                            value={title}
+                                            onChange={(event) => setTitle(event.target.value)}
+                                            placeholder="Server Name"
+                                        />
+                                    </div>
                                     <div className="grid gap-2">
                                         <Label htmlFor="announcement-color">{t.color}</Label>
                                         <Input
@@ -144,8 +171,13 @@ function AnnouncementDialog({
                                             id="announcement-logo"
                                             value={logo}
                                             onChange={(event) => setLogo(event.target.value)}
-                                            placeholder="images/diamond-circle-logo.png"
+                                            placeholder="https://example.com/logo.png"
                                         />
+                                    </div>
+                                    <div className="sm:col-span-2">
+                                        <Button type="button" variant="outline" onClick={saveDefaults}>
+                                            {t.saveDefaults}
+                                        </Button>
                                     </div>
                                     {mode === 'gksphone' && (
                                         <div className="grid gap-2 sm:col-span-2">
@@ -180,7 +212,7 @@ function AnnouncementDialog({
                                 className="w-full rounded-md border p-3 text-sm"
                                 style={{ borderColor: color, boxShadow: `inset 3px 0 0 ${color}` }}
                             >
-                                <div className="font-semibold">DiamondCrew</div>
+                                <div className="font-semibold">{title || 'Server Name'}</div>
                                 <div className="text-muted-foreground break-words">
                                     {message || t.preview}
                                 </div>

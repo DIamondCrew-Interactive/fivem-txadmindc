@@ -45,6 +45,7 @@ export default async function FXServerCommands(ctx: AuthedCtx) {
         let payload: {
             mode?: string;
             message: string;
+            title?: string;
             color?: string;
             logo?: string;
             phoneType?: string;
@@ -54,6 +55,7 @@ export default async function FXServerCommands(ctx: AuthedCtx) {
             payload = {
                 mode: typeof parsedPayload.mode === 'string' ? parsedPayload.mode : 'server',
                 message: typeof parsedPayload.message === 'string' ? parsedPayload.message.trim() : '',
+                title: typeof parsedPayload.title === 'string' ? parsedPayload.title.trim() : undefined,
                 color: typeof parsedPayload.color === 'string' ? parsedPayload.color : undefined,
                 logo: typeof parsedPayload.logo === 'string' ? parsedPayload.logo : undefined,
                 phoneType: typeof parsedPayload.phoneType === 'string' ? parsedPayload.phoneType : undefined,
@@ -77,6 +79,7 @@ export default async function FXServerCommands(ctx: AuthedCtx) {
             message,
             author: ctx.admin.name,
             mode: payload.mode,
+            title: payload.title,
             color: payload.color,
             logo: payload.logo,
             phoneType: payload.phoneType,

@@ -61,6 +61,7 @@ enum AnnouncementMode {
   Server = "server",
   Gksphone = "gksphone",
   Gta = "gta",
+  Gtao = "gtao",
 }
 
 // TODO: This component is kinda getting out of hand, might want to split it somehow
@@ -259,7 +260,6 @@ export const MainPageList: React.FC = () => {
             mode,
             message,
             color: "#2EC7FF",
-            logo: "images/diamond-circle-logo.png",
             phoneType: "success",
           }),
         });
@@ -527,6 +527,16 @@ export const MainPageList: React.FC = () => {
             onSelect: () => {
               setAnnouncementMode(AnnouncementMode.Gta);
               handleAnnounceMessage(AnnouncementMode.Gta);
+            },
+          },
+          {
+            name: t("nui_menu.page_main.announcement.mode_gtao"),
+            label: t("nui_menu.page_main.announcement.mode_gtao_label"),
+            value: AnnouncementMode.Gtao,
+            icon: <Campaign />,
+            onSelect: () => {
+              setAnnouncementMode(AnnouncementMode.Gtao);
+              handleAnnounceMessage(AnnouncementMode.Gtao);
             },
           },
         ],

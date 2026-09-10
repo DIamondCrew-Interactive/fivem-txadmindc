@@ -29,8 +29,16 @@ end)
 -- =============================================
 --  Announcement, DirectMessage and Warn handling
 -- =============================================
+local function playAnnouncementSound()
+    if not IS_FIVEM then return end
+    pcall(function()
+        PlaySoundFrontend(-1, 'Event_Start_Text', 'GTAO_FM_Events_Soundset', true)
+    end)
+end
+
 -- Dispatch Announcements
 RegisterNetEvent('txcl:showAnnouncement', function(message, author, color, logo)
+    playAnnouncementSound()
     sendMenuMessage(
         'addAnnounceMessage',
         {
@@ -42,12 +50,15 @@ RegisterNetEvent('txcl:showAnnouncement', function(message, author, color, logo)
     )
 end)
 local function getAnnouncementLogo(logo)
-    if logo == nil or logo == '' or logo == 'images/diamond-circle-logo.png' then
+    if logo == nil or logo == '' then
+        return nil
+    elseif logo == 'images/diamond-circle-logo.png' then
         return 'nui://monitor/nui/images/diamond-circle-logo.png'
     end
     return logo
 end
 RegisterNetEvent('txcl:showGksphoneAnnouncement', function(message, author, color, logo, phoneType)
+    playAnnouncementSound()
     local notifData = {
         title = author or 'Server Announcement',
         message = message or '',
@@ -71,12 +82,25 @@ RegisterNetEvent('txcl:showGcphoneAnnouncement', function(message, author, color
     TriggerEvent('txcl:showGksphoneAnnouncement', message, author, color, logo, phoneType)
 end)
 RegisterNetEvent('txcl:showGtaAnnouncement', function(message, author, color, logo)
+    playAnnouncementSound()
     if not IS_FIVEM then
         return TriggerEvent('txcl:showAnnouncement', message, author, color, logo)
     end
     BeginTextCommandThefeedPost('STRING')
     AddTextComponentSubstringPlayerName(('~b~%s~s~\n%s'):format(author or 'Server', message or ''))
     EndTextCommandThefeedPostTicker(false, false)
+end)
+RegisterNetEvent('txcl:showGtaoAnnouncement', function(message, author, color, logo)
+    playAnnouncementSound()
+    sendMenuMessage(
+        'addGtaoAnnounceMessage',
+        {
+            message = message,
+            author = author,
+            color = color,
+            logo = getAnnouncementLogo(logo)
+        }
+    )
 end)
 RegisterNetEvent('txcl:showDirectMessage', function(message, author)
     sendMenuMessage(

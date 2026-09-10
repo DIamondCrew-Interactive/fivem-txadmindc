@@ -80,7 +80,7 @@
             "no_perms": "Na tuto možnost nemáš práva.",
             "unknown_error": "Nastala neznámá chyba.",
             "not_enabled": "txAdmin menu není povoleno! Můžeš ho povolit v txAdmin nastavení.",
-            "announcement_title": "Server oznámení od %{author}:",
+            "announcement_title": "Oznámení serveru od %{author}:",
             "dialog_empty_input": "Políčko nemůže být prázdné.",
             "directmessage_title": "Soukromá zpráva od admina %{author}:",
             "onesync_error": "This action requires OneSync to be enabled."
@@ -207,7 +207,9 @@
                 "mode_gksphone": "gksphone",
                 "mode_gksphone_label": "Pošle gksphone notifikaci všem hráčům.",
                 "mode_gta": "GTA",
-                "mode_gta_label": "Zobrazí klasickou GTA notifikaci nad minimapou."
+                "mode_gta_label": "Zobrazí klasickou GTA notifikaci nad minimapou.",
+                "mode_gtao": "GTA:O",
+                "mode_gtao_label": "Zobrazí GTA Online styl notifikace s ikonou serveru."
             },
             "clear_area": {
                 "title": "Obnovit oblast",
