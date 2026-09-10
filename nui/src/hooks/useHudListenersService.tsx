@@ -85,51 +85,6 @@ const AnnounceMessage: React.FC<AnnounceMessageProps> = ({
   </Box>
 );
 
-const GtaoAnnounceMessage: React.FC<AnnounceMessageProps> = ({
-  title,
-  message,
-  color,
-  logo,
-}) => (
-  <Box
-    width={330}
-    display="grid"
-    gridTemplateColumns={logo ? "52px 1fr" : "1fr"}
-    gap={1.25}
-    alignItems="center"
-    sx={{
-      background: "linear-gradient(135deg, rgba(18, 20, 25, 0.94), rgba(42, 43, 49, 0.82))",
-      borderLeft: `4px solid ${color || "#F3D36B"}`,
-      borderRadius: "4px",
-      boxShadow: "0 14px 34px rgba(0, 0, 0, 0.36)",
-      p: 1.25,
-    }}
-  >
-    {logo && (
-      <Box
-        component="img"
-        src={logo}
-        alt=""
-        sx={{
-          width: 44,
-          height: 44,
-          borderRadius: "6px",
-          objectFit: "cover",
-          background: "rgba(255, 255, 255, 0.08)",
-        }}
-      />
-    )}
-    <Box minWidth={0}>
-      <Typography noWrap sx={{ fontWeight: 800, lineHeight: 1.15 }}>
-        {title}
-      </Typography>
-      <Typography sx={{ whiteSpace: "pre-wrap", color: "rgba(255,255,255,0.82)", lineHeight: 1.25 }}>
-        {message}
-      </Typography>
-    </Box>
-  </Box>
-);
-
 const alertMap = new Map<string, SnackbarKey>();
 
 debugData(
@@ -309,26 +264,6 @@ export const useHudListenersService = () => {
         anchorOrigin: {
           horizontal: notiPos.horizontal,
           vertical: notiPos.vertical,
-        },
-      }
-    );
-  });
-
-  useNuiEvent<AddAnnounceData>("addGtaoAnnounceMessage", ({ message, author, color, logo }) => {
-    announcementSound.play();
-    enqueueSnackbar(
-      <GtaoAnnounceMessage
-        message={message}
-        title={author}
-        color={color}
-        logo={logo}
-      />,
-      {
-        variant: "info",
-        autoHideDuration: getNotiDuration(message) * 1000,
-        anchorOrigin: {
-          horizontal: "right",
-          vertical: "bottom",
         },
       }
     );

@@ -171,7 +171,7 @@ function AnnouncementDialog({
                                             id="announcement-logo"
                                             value={logo}
                                             onChange={(event) => setLogo(event.target.value)}
-                                            placeholder="https://example.com/logo.png"
+                                            placeholder={mode === 'gtao' ? 'CHAR_DEFAULT' : 'https://example.com/logo.png'}
                                         />
                                     </div>
                                     <div className="sm:col-span-2">

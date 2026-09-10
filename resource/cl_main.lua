@@ -57,6 +57,25 @@ local function getAnnouncementLogo(logo)
     end
     return logo
 end
+local function getGtaNotificationPicture(logo)
+    if type(logo) ~= 'string' or logo == '' or logo == 'images/diamond-circle-logo.png' then
+        return 'CHAR_DEFAULT'
+    end
+    if logo:find('://', 1, true) or logo:find('/', 1, true) then
+        return 'CHAR_DEFAULT'
+    end
+    return logo
+end
+local function requestNotificationPicture(textureDict)
+    if not IS_FIVEM or type(textureDict) ~= 'string' or textureDict == '' then return end
+    if HasStreamedTextureDictLoaded(textureDict) then return end
+
+    RequestStreamedTextureDict(textureDict, false)
+    local timeoutAt = GetGameTimer() + 750
+    while not HasStreamedTextureDictLoaded(textureDict) and GetGameTimer() < timeoutAt do
+        Wait(0)
+    end
+end
 RegisterNetEvent('txcl:showGksphoneAnnouncement', function(message, author, color, logo, phoneType)
     playAnnouncementSound()
     local notifData = {
@@ -92,15 +111,16 @@ RegisterNetEvent('txcl:showGtaAnnouncement', function(message, author, color, lo
 end)
 RegisterNetEvent('txcl:showGtaoAnnouncement', function(message, author, color, logo)
     playAnnouncementSound()
-    sendMenuMessage(
-        'addGtaoAnnounceMessage',
-        {
-            message = message,
-            author = author,
-            color = color,
-            logo = getAnnouncementLogo(logo)
-        }
-    )
+    if not IS_FIVEM then
+        return TriggerEvent('txcl:showAnnouncement', message, author, color, logo)
+    end
+
+    local picture = getGtaNotificationPicture(logo)
+    requestNotificationPicture(picture)
+    BeginTextCommandThefeedPost('STRING')
+    AddTextComponentSubstringPlayerName(message or '')
+    EndTextCommandThefeedPostMessagetext(picture, picture, true, 1, author or 'Server', 'Oznameni serveru')
+    EndTextCommandThefeedPostTicker(false, false)
 end)
 RegisterNetEvent('txcl:showDirectMessage', function(message, author)
     sendMenuMessage(
