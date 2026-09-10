@@ -22,9 +22,7 @@ import { TextField } from "../misc/TextField";
 import { useDebounce } from "@nui/src/hooks/useDebouce";
 
 const TypographyTitle = styled(Typography)(({ theme }) => ({
-  fontWeight: 800,
-  letterSpacing: 0,
-  textShadow: "0 0 18px rgba(46, 199, 255, 0.28)",
+  fontWeight: 600,
 }));
 
 const TypographyPlayerCount = styled(Typography)(({ theme }) => ({
@@ -37,7 +35,7 @@ const InputAdornmentIcon = styled(InputAdornment)(({ theme }) => ({
 }));
 
 const TextFieldInputs = styled(TextField)({
-  minWidth: 178,
+  minWidth: 150,
 });
 
 export const PlayerPageHeader: React.FC = () => {
@@ -82,25 +80,8 @@ export const PlayerPageHeader: React.FC = () => {
   const playerCountText = `${allPlayers.length}/${serverCtx.maxClients} ${playerTranslation} - ${oneSyncStatus}`;
 
   return (
-    <Box
-      display="flex"
-      justifyContent="space-between"
-      alignItems="flex-end"
-      gap={3}
-      flexWrap="wrap"
-      pb={2}
-    >
-      <Box
-        px={2}
-        py={1.25}
-        sx={{
-          borderRadius: 2,
-          background: "rgba(8, 13, 18, 0.58)",
-          border: "1px solid rgba(243, 211, 107, 0.18)",
-          backdropFilter: "blur(8px)",
-          boxShadow: "0 12px 30px rgba(0, 0, 0, 0.24)",
-        }}
-      >
+    <Box display="flex" justifyContent="space-between">
+      <Box px={2}>
         <TypographyTitle variant="h5" color="primary">
           {t("nui_menu.page_players.misc.online_players")}
         </TypographyTitle>
@@ -108,23 +89,7 @@ export const PlayerPageHeader: React.FC = () => {
           {playerCountText}
         </TypographyPlayerCount>
       </Box>
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="flex-end"
-        gap={2}
-        flexWrap="wrap"
-        sx={{
-          maxWidth: "66%",
-          px: 2,
-          py: 1,
-          borderRadius: 2,
-          background: "rgba(8, 13, 18, 0.58)",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-          backdropFilter: "blur(8px)",
-          boxShadow: "0 12px 30px rgba(0, 0, 0, 0.22)",
-        }}
-      >
+      <Box display="flex" alignItems="center" justifyContent="center" gap={3}>
         <TextFieldInputs
           label={t("nui_menu.page_players.misc.search")}
           value={searchVal}

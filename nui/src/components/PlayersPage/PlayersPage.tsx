@@ -7,18 +7,15 @@ import { PlayersListGrid } from "./PlayersListGrid";
 import { usePlayerListListener } from "../../hooks/usePlayerListListener";
 
 const RootStyled = styled(Box)(() => ({
-  height: "52vh",
-  maxHeight: 590,
-  minHeight: 360,
+  backgroundColor: "transparent",
+  height: "50vh",
   flex: 1,
-  overflow: "visible",
 }));
 
-const GridStyled = styled(Box)(() => ({
+const GridStyled = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
-  flex: 1,
-  minHeight: 0,
+  height: "85%",
 }));
 
 export const PlayersPage: React.FC<{ visible: boolean }> = ({ visible }) => {
@@ -30,10 +27,9 @@ export const PlayersPage: React.FC<{ visible: boolean }> = ({ visible }) => {
     <RootStyled
       mt={2}
       mb={10}
-      pt={1}
-      px={1}
-      display={visible ? "flex" : "none"}
-      flexDirection="column"
+      pt={4}
+      px={4}
+      display={visible ? "initial" : "none"}
     >
       <PlayerPageHeader />
       <GridStyled>
