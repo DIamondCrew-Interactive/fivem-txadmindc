@@ -249,12 +249,12 @@ export const useHudListenersService = () => {
     }
   });
 
-  useNuiEvent<AddAnnounceData>("addAnnounceMessage", ({ message, author, color, logo }) => {
+  useNuiEvent<AddAnnounceData>("addAnnounceMessage", ({ message, color, logo }) => {
     announcementSound.play();
     enqueueSnackbar(
       <AnnounceMessage
         message={message}
-        title={t("nui_menu.misc.announcement_title", { author })}
+        title="Oznámení serveru"
         color={color}
         logo={logo}
       />,
