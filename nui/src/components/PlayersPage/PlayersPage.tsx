@@ -7,7 +7,11 @@ import { PlayersListGrid } from "./PlayersListGrid";
 import { usePlayerListListener } from "../../hooks/usePlayerListListener";
 
 const RootStyled = styled(Box)(() => ({
-  backgroundColor: "transparent",
+  background: "rgba(8, 13, 18, 0.42)",
+  border: "1px solid rgba(243, 211, 107, 0.18)",
+  borderRadius: 15,
+  boxShadow: "0 12px 34px rgba(0, 0, 0, 0.22)",
+  backdropFilter: "blur(6px)",
   height: "50vh",
   flex: 1,
 }));
