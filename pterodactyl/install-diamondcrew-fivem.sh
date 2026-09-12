@@ -17,8 +17,8 @@ need_cmd() {
 SERVER_DIR="/mnt/server"
 ARTIFACT_INDEX="https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/"
 TXADMIN_REPO="https://github.com/DIamondCrew-Interactive/fivem-txadmindc"
-TXADMIN_VERSION="${TXADMIN_VERSION:-v1.0.0}"
-TXADMIN_SHA256="${TXADMIN_SHA256:-935871ceed3ef90442e4e60f302b0dfb76e2e5be0c9ec5f649597e5328df8f88}"
+TXADMIN_VERSION="${TXADMIN_VERSION:-v1.0.12}"
+TXADMIN_SHA256="${TXADMIN_SHA256:-4f11b66516c857c7ebb0084bda5f298a1a5a2ff06ae01ebec6bbfded56f4d6e9}"
 TXADMIN_URL="${TXADMIN_REPO}/releases/download/${TXADMIN_VERSION}/monitor.zip"
 CFX_DIR="${SERVER_DIR}/alpine/opt/cfx-server"
 MONITOR_DIR="${CFX_DIR}/citizen/system_resources/monitor"
@@ -55,13 +55,46 @@ resolve_artifact_url() {
         || fail "Could not read FXServer artifact index"
 
     rel="$(printf '%s' "${page}" \
-        | grep -Eo 'href="[0-9]+-[^"]+/fx.tar.xz"' \
-        | sed -E 's/^href="//; s/"$//' \
-        | head -n 1)"
+        | grep -Eo 'href="(\./)?[0-9]+-[[:alnum:]]+/fx\.tar\.xz"' \
+        | sed -E 's/^href="(\.\/)?//; s/"$//' \
+        | sed -n '1p')" \
+        || fail "Could not find fx.tar.xz in FXServer artifact index"
 
     [ -n "${rel}" ] || fail "Could not find fx.tar.xz in FXServer artifact index"
     printf '%s%s\n' "${ARTIFACT_INDEX}" "${rel}"
 }
+
+info "Downloading DiamondCrew txAdmin ${TXADMIN_VERSION}: ${TXADMIN_URL}"
+curl -fL --retry 3 --connect-timeout 30 "${TXADMIN_URL}" -o "${TMP_DIR}/monitor.zip" \
+    || fail "DiamondCrew txAdmin monitor.zip download failed"
+
+info "Verifying DiamondCrew txAdmin SHA256"
+printf '%s  %s\n' "${TXADMIN_SHA256}" "${TMP_DIR}/monitor.zip" | sha256sum -c - \
+    || fail "DiamondCrew txAdmin SHA256 mismatch"
+
+unzip -tq "${TMP_DIR}/monitor.zip" \
+    || fail "DiamondCrew txAdmin ZIP integrity check failed"
+
+info "Extracting DiamondCrew txAdmin monitor"
+mkdir -p "${TMP_DIR}/monitor-extract"
+unzip -q "${TMP_DIR}/monitor.zip" -d "${TMP_DIR}/monitor-extract" \
+    || fail "DiamondCrew txAdmin ZIP extraction failed"
+
+[ -d "${TMP_DIR}/monitor-extract/monitor" ] \
+    || fail "DiamondCrew txAdmin ZIP must contain top-level monitor directory"
+
+for required in \
+    entrypoint.js \
+    fxmanifest.lua \
+    core/index.js \
+    panel/index.html \
+    nui/index.html \
+    panel/images/diamond-circle-logo.png \
+    nui/images/diamond-circle-logo.png \
+    diamondcrew-build.json
+do
+    [ -e "${TMP_DIR}/monitor-extract/monitor/${required}" ] || fail "Downloaded monitor is missing ${required}"
+done
 
 ARTIFACT_URL="$(resolve_artifact_url)"
 info "Downloading Linux FXServer artifact: ${ARTIFACT_URL}"
@@ -98,22 +131,6 @@ if [ -d "${MONITOR_DIR}" ]; then
 else
     info "Stock monitor directory was not present; continuing"
 fi
-
-info "Downloading DiamondCrew txAdmin ${TXADMIN_VERSION}: ${TXADMIN_URL}"
-curl -fL --retry 3 --connect-timeout 30 "${TXADMIN_URL}" -o "${TMP_DIR}/monitor.zip" \
-    || fail "DiamondCrew txAdmin monitor.zip download failed"
-
-info "Verifying DiamondCrew txAdmin SHA256"
-printf '%s  %s\n' "${TXADMIN_SHA256}" "${TMP_DIR}/monitor.zip" | sha256sum -c - \
-    || fail "DiamondCrew txAdmin SHA256 mismatch"
-
-info "Extracting DiamondCrew txAdmin monitor"
-mkdir -p "${TMP_DIR}/monitor-extract"
-unzip -q "${TMP_DIR}/monitor.zip" -d "${TMP_DIR}/monitor-extract" \
-    || fail "DiamondCrew txAdmin ZIP extraction failed"
-
-[ -d "${TMP_DIR}/monitor-extract/monitor" ] \
-    || fail "DiamondCrew txAdmin ZIP must contain top-level monitor directory"
 
 cp -a "${TMP_DIR}/monitor-extract/monitor" "${MONITOR_DIR}" \
     || fail "Could not install DiamondCrew monitor directory"

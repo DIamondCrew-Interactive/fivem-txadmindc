@@ -245,7 +245,7 @@ RegisterNetEvent('txcl:showGksphoneAnnouncement', function(message, author, colo
     local notifData = {
         title = author or 'Server Announcement',
         message = message or '',
-        icon = logo or 'nui://monitor/nui/images/diamond-circle-logo.png',
+        icon = '/html/img/icons/messages.png',
         duration = 5000,
         type = phoneType or 'success',
         buttonactive = false,
@@ -262,7 +262,9 @@ Installer behavior:
 
 - If `GKSPHONE_ENABLED=true`, ensure `gksphone` is installed and starts before resources that depend on it.
 - If not installed, txAdmin falls back to the normal announcement UI.
-- Do not copy txAdmin logo into the gksphone resource unless the server owner explicitly wants that; the preferred icon path is `nui://monitor/nui/images/diamond-circle-logo.png`.
+- Always provide a PNG icon: GKSPhone derives its lock-screen app name from the icon filename. A nil icon can throw in the phone NUI even when the Lua export returns successfully.
+- The default icon matches the working pm_bells integration: `/html/img/icons/messages.png`. The runtime normalizes a selected DiamondCrew logo to `https://cfx-nui-monitor/nui/images/diamond-circle-logo.png`.
+- The runtime checks that gksphone is started and falls back on a synchronous export exception or an explicit false return. Export success alone does not confirm rendering on a player's phone.
 
 ## Mugshot Cache Design
 
