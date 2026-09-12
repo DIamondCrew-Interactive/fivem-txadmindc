@@ -96,12 +96,25 @@ local function tryBulletinAnnouncement(message, author, picture)
     end)
     return ok
 end
+local function getGksphoneAnnouncementIcon(logo)
+    -- GKSPhone derives the lock-screen app name from a PNG filename.
+    -- A missing icon makes its NUI throw before displaying the notification.
+    if type(logo) ~= 'string' or not logo:find('.png', 1, true) then
+        return '/html/img/icons/messages.png'
+    end
+    if logo == 'images/diamond-circle-logo.png' then
+        return 'https://cfx-nui-monitor/nui/images/diamond-circle-logo.png'
+    end
+    return (logo:gsub('^nui://([^/]+)/', 'https://cfx-nui-%1/'))
+end
 RegisterNetEvent('txcl:showGksphoneAnnouncement', function(message, author, color, logo, phoneType)
-    playAnnouncementSound()
+    if GetResourceState('gksphone') ~= 'started' then
+        return TriggerEvent('txcl:showAnnouncement', message, author, color, logo)
+    end
     local notifData = {
         title = author or 'Server Announcement',
         message = message or '',
-        icon = getAnnouncementLogo(logo),
+        icon = getGksphoneAnnouncementIcon(logo),
         duration = 5000,
         type = phoneType or 'success',
         buttonactive = false,
@@ -110,10 +123,11 @@ RegisterNetEvent('txcl:showGksphoneAnnouncement', function(message, author, colo
             buttonData = '',
         }
     }
-    local exported = pcall(function()
-        exports["gksphone"]:Notification(notifData)
+    local exported, result = pcall(function()
+        return exports["gksphone"]:Notification(notifData)
     end)
-    if not exported then
+    if not exported or result == false then
+        print('[txAdmin] GKSPhone announcement failed; using the standard announcement.')
         TriggerEvent('txcl:showAnnouncement', message, author, color, logo)
     end
 end)
