@@ -4,6 +4,7 @@ import { DatabaseActionBanType, DatabaseActionType, DatabaseActionWarnType } fro
 import { genActionID } from "../dbUtils";
 import { now } from '@lib/misc';
 import consoleFactory from '@lib/console';
+import moderationBridge from '../../Moderation/bridge.cjs';
 const console = consoleFactory('DatabaseDao');
 
 
@@ -118,10 +119,10 @@ export default class ActionsDao {
                     author: null,
                 },
             };
-            this.chain.get('actions')
-                .push(toDB)
-                .value();
-            this.db.writeFlag(SavePriority.HIGH);
+            if (!moderationBridge.registerNativeBan(this.db, toDB)) {
+                this.chain.get('actions').push(toDB).value();
+                this.db.writeFlag(SavePriority.HIGH);
+            }
             return actionID;
         } catch (error) {
             let msg = `Failed to register ban to database with message: ${(error as Error).message}`;
@@ -224,11 +225,15 @@ export default class ActionsDao {
                 throw new Error(`you do not have permission to revoke this action`);
             }
 
-            action.revocation = {
+            if (action.type === 'ban' && action.revocation.timestamp) throw new Error('Ban is already revoked');
+            const revocation = {
                 timestamp: now(),
                 author,
             };
-            this.db.writeFlag(SavePriority.HIGH);
+            if (!moderationBridge.revokeNativeBan(this.db, action, revocation)) {
+                action.revocation = revocation;
+                this.db.writeFlag(SavePriority.HIGH);
+            }
             return cloneDeep(action);
 
         } catch (error) {

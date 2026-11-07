@@ -43,6 +43,9 @@ jobs:
       - name: Typecheck workspaces
         run: npm run typecheck --workspaces
 
+      - name: Test moderation audit
+        run: node --test tests/moderation-bridge.cjs
+
       - name: Build project
         run: |
           npm run build

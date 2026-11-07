@@ -7,6 +7,7 @@ import type { DatabaseActionType } from "../../../../core/modules/Database/datab
 import { useOpenPlayerModal } from "@/hooks/playerModal";
 import DateTimeCorrected from "@/components/DateTimeCorrected";
 import { ModalTabInner } from "@/components/modal-tabs";
+import { usePanelLocale } from "@/hooks/panelLocale";
 
 
 const calcTextAreaLines = (text?: string) => {
@@ -44,6 +45,9 @@ type ActionInfoTabProps = {
 
 export default function ActionInfoTab({ action, serverTime, tsFetch }: ActionInfoTabProps) {
     const openPlayerModal = useOpenPlayerModal();
+    const { locale } = usePanelLocale();
+    const changes = action.type === 'ban' ? action.prismaticExpiryChanges?.slice().reverse() : undefined;
+    const showTime = (timestamp: number) => <DateTimeCorrected serverTime={serverTime} tsFetch={tsFetch} tsObject={timestamp} />;
 
     let banExpirationText: React.ReactNode;
     if (action.type === 'ban') {
@@ -149,6 +153,26 @@ export default function ActionInfoTab({ action, serverTime, tsFetch }: ActionInf
             </dl>
 
             <ActionReasonBox actionReason={action.reason} />
+            {changes && changes.length > 0 && (
+                <section className="mt-4">
+                    <h3 className="text-sm font-semibold">{locale === 'cs' ? 'Historie změn délky banu' : 'Ban duration history'}</h3>
+                    <ol className="mt-1 max-h-52 space-y-2 overflow-y-auto text-sm">
+                        {changes.map(change => (
+                            <li key={change.revision} className="rounded-md border p-2">
+                                <div className="font-medium">
+                                    {change.expiresAt < change.previousExpiresAt
+                                        ? (locale === 'cs' ? 'Zkrácení' : 'Shortened')
+                                        : (locale === 'cs' ? 'Prodloužení' : 'Extended')}
+                                    {' · '}{showTime(change.changedAt)}
+                                </div>
+                                <div>Discord ID {change.actorDiscordId}</div>
+                                <div>{showTime(change.previousExpiresAt)} {' → '} {showTime(change.expiresAt)}</div>
+                                <div className="whitespace-pre-wrap break-words text-muted-foreground">{change.reason}</div>
+                            </li>
+                        ))}
+                    </ol>
+                </section>
+            )}
         </ModalTabInner>
     );
 }

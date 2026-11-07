@@ -50,18 +50,23 @@ resolve_artifact_url() {
     fi
 
     info "Resolving latest Linux FXServer artifact"
-    local page rel
+    local page url
     page="$(curl -fsSL --retry 3 --connect-timeout 20 "${ARTIFACT_INDEX}")" \
         || fail "Could not read FXServer artifact index"
 
-    rel="$(printf '%s' "${page}" \
-        | grep -Eo 'href="(\./)?[0-9]+-[[:alnum:]]+/fx\.tar\.xz"' \
-        | sed -E 's/^href="(\.\/)?//; s/"$//' \
-        | sed -n '1p')" \
-        || fail "Could not find fx.tar.xz in FXServer artifact index"
-
-    [ -n "${rel}" ] || fail "Could not find fx.tar.xz in FXServer artifact index"
-    printf '%s%s\n' "${ARTIFACT_INDEX}" "${rel}"
+    url="$(printf '%s' "${page}" \
+        | grep -Eo 'https://runtime\.fivem\.net/artifacts/fivem/build_proot_linux/master/[0-9]+-[[:xdigit:]]+/fx\.tar\.xz' \
+        | sed -n '1p' || true)"
+    if [ -z "${url}" ]; then
+        local rel
+        rel="$(printf '%s' "${page}" \
+            | grep -Eo 'href="(\./)?[0-9]+-[[:xdigit:]]+/fx\.tar\.xz"' \
+            | sed -E 's/^href="(\.\/)?//; s/"$//' \
+            | sed -n '1p' || true)"
+        [ -n "${rel}" ] || fail "Could not find fx.tar.xz in FXServer artifact index"
+        url="${ARTIFACT_INDEX}${rel}"
+    fi
+    printf '%s\n' "${url}"
 }
 
 info "Downloading DiamondCrew txAdmin ${TXADMIN_VERSION}: ${TXADMIN_URL}"

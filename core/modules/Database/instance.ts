@@ -11,6 +11,7 @@ import migrations from './migrations.js';
 import consoleFactory from '@lib/console.js';
 import fatalError from '@lib/fatalError.js';
 import { TimeCounter } from '@modules/Metrics/statsUtils.js';
+import moderationBridge from '../Moderation/bridge.cjs';
 const console = consoleFactory(modulename);
 
 //Consts & helpers
@@ -56,7 +57,7 @@ class JSONFile<T> implements Adapter<T> {
     private readonly serializer: Function;
     public fileSize: number = 0;
 
-    constructor(filename: string) {
+    constructor(private readonly filename: string) {
         this.adapter = new TextFile(filename);
         this.serializer = (txDevEnv.ENABLED)
             ? (obj: any) => JSON.stringify(obj, null, 4)
@@ -72,10 +73,10 @@ class JSONFile<T> implements Adapter<T> {
         }
     }
 
-    write(obj: T): Promise<void> {
+    async write(obj: T): Promise<void> {
         const serialized = this.serializer(obj);
         this.fileSize = serialized.length;
-        return this.adapter.write(serialized);
+        await moderationBridge.writeDatabase(this.filename, serialized, () => this.adapter.write(serialized));
     }
 }
 
@@ -99,6 +100,7 @@ export class DbInstance {
     constructor() {
         this.dbPath = `${txEnv.profilePath}/data/playersDB.json`;
         this.backupPath = `${txEnv.profilePath}/data/playersDB.backup.json`;
+        moderationBridge.attach(this);
 
         //Start database instance
         this.setupDatabase();

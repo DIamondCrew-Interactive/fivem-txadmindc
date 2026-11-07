@@ -31,10 +31,21 @@ export type DatabaseActionBaseType = {
         author: string | null;
     };
 };
+export type DatabaseBanExpiryChange = {
+    requestId: string;
+    actorDiscordId: string;
+    previousExpiresAt: number;
+    expiresAt: number;
+    changedAt: number;
+    reason: string;
+    revision: number;
+};
+
 export type DatabaseActionBanType = {
     type: 'ban';
     hwids?: string[];
     expiration: number | false;
+    prismaticExpiryChanges?: DatabaseBanExpiryChange[];
 } & DatabaseActionBaseType;
 export type DatabaseActionWarnType = {
     type: 'warn';
