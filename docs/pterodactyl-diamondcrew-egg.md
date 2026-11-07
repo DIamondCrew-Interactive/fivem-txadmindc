@@ -72,8 +72,8 @@ For DiamondCrew deployments, keep `TXADMIN_ENABLED=true`.
 | `SERVER_MAX_PLAYERS` | `48` | yes | Used by the direct FXServer fallback. |
 | `SERVER_NAME` | `DiamondCrew FiveM` | yes | Display name/default metadata. |
 | `TXADMIN_ENABLED` | `true` | yes | Keep enabled for this custom txAdmin. |
-| `TXADMIN_VERSION` | `v1.0.12` | yes | GitHub Release tag. |
-| `TXADMIN_SHA256` | `4f11b66516c857c7ebb0084bda5f298a1a5a2ff06ae01ebec6bbfded56f4d6e9` | yes | Must match `monitor.zip`. |
+| `TXADMIN_VERSION` | `v1.0.13` | yes | GitHub Release tag. |
+| `TXADMIN_SHA256` | `cea891c14cdff117a0305241a3cf1e8feee8ebdcb0f28e0d524a6562bc390f51` | yes | Must match `monitor.zip`. |
 
 ## Import Procedure
 
@@ -100,8 +100,8 @@ Use these values for `Prismatic Roleplay - DEV`:
 | txAdmin allocation | `33031` |
 | `TXADMIN_PORT` | `33031` |
 | `TXADMIN_PUBLIC_URL` | `https://tx-dev.pmrp.cz` |
-| `TXADMIN_VERSION` | `v1.0.12` |
-| `TXADMIN_SHA256` | `4f11b66516c857c7ebb0084bda5f298a1a5a2ff06ae01ebec6bbfded56f4d6e9` |
+| `TXADMIN_VERSION` | `v1.0.13` |
+| `TXADMIN_SHA256` | `cea891c14cdff117a0305241a3cf1e8feee8ebdcb0f28e0d524a6562bc390f51` |
 | `TXADMIN_ENABLED` | `true` |
 | `FXSERVER_ARTIFACT_URL` | `https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/35245-6efb47dff473c0e2a12fb50b08d74c0eb24a50d5/fx.tar.xz` |
 | `SERVER_NAME` | `Prismatic Roleplay - DEV` |
