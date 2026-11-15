@@ -2,6 +2,8 @@
 
 Custom DiamondCrew Interactive build of txAdmin for FiveM/RedM server management, with a redesigned web panel, redesigned in-game menu identity, PNG DiamondCrew branding, Czech/English panel toggle, gksphone announcements, GTA-style notification support, and player mugshot caching.
 
+Read-only live player lookup and ban/warn history for server resources: [integration guide](docs/player-reader.md).
+
 ## Main Features
 - Recipe-based Server Deployer: create a server in under 60 seconds! ([docs/recipe.md](docs/recipe.md))
 - Start/Stop/Restart your server instance or resources

@@ -72,8 +72,8 @@ For DiamondCrew deployments, keep `TXADMIN_ENABLED=true`.
 | `SERVER_MAX_PLAYERS` | `48` | yes | Used by the direct FXServer fallback. |
 | `SERVER_NAME` | `DiamondCrew FiveM` | yes | Display name/default metadata. |
 | `TXADMIN_ENABLED` | `true` | yes | Keep enabled for this custom txAdmin. |
-| `TXADMIN_VERSION` | `v1.0.13` | yes | GitHub Release tag. |
-| `TXADMIN_SHA256` | `cea891c14cdff117a0305241a3cf1e8feee8ebdcb0f28e0d524a6562bc390f51` | yes | Must match `monitor.zip`. |
+| `TXADMIN_VERSION` | `v1.0.14` | yes | GitHub Release tag. |
+| `TXADMIN_SHA256` | `a400ed5b766de9dfb924fc4c7c08fbfe8776ff860319c519ed65a0471080a87c` | yes | Must match `monitor.zip`. |
 
 ## Import Procedure
 
@@ -100,8 +100,8 @@ Use these values for `Prismatic Roleplay - DEV`:
 | txAdmin allocation | `33031` |
 | `TXADMIN_PORT` | `33031` |
 | `TXADMIN_PUBLIC_URL` | `https://tx-dev.pmrp.cz` |
-| `TXADMIN_VERSION` | `v1.0.13` |
-| `TXADMIN_SHA256` | `cea891c14cdff117a0305241a3cf1e8feee8ebdcb0f28e0d524a6562bc390f51` |
+| `TXADMIN_VERSION` | `v1.0.14` |
+| `TXADMIN_SHA256` | `a400ed5b766de9dfb924fc4c7c08fbfe8776ff860319c519ed65a0471080a87c` |
 | `TXADMIN_ENABLED` | `true` |
 | `FXSERVER_ARTIFACT_URL` | `https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/35245-6efb47dff473c0e2a12fb50b08d74c0eb24a50d5/fx.tar.xz` |
 | `SERVER_NAME` | `Prismatic Roleplay - DEV` |
@@ -116,3 +116,5 @@ Use these values for `Prismatic Roleplay - DEV`:
 - If `FXSERVER_ARTIFACT_URL=latest`, reinstalling later can pull a newer FXServer artifact. For production, pin a direct Linux artifact URL after testing.
 - On 2026-09-09, the FiveM artifact page listed build `35245` as `LATEST RECOMMENDED`; that is the pinned URL shown above.
 - The installer only removes `alpine/opt/cfx-server/citizen/system_resources/monitor/` inside `/mnt/server`; it does not delete `server-data` or `txData`.
+
+The stop signal is `^SIGTERM`: the monitor-mode parent does not exit on a console `quit`. The live read-only player API and server exports are documented in [player-reader.md](player-reader.md).
