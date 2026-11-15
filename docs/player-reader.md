@@ -13,7 +13,10 @@ local result, err = exports.monitor:SearchPlayers('fivem:904336', 25, 0)
 local history, err = exports.monitor:GetPlayerHistory('license:' .. hash, 50, 0)
 ```
 
-Exporty jsou pouze serverové a čekají nejvýše 4 s. Povolena je resource
+Exporty jsou pouze serverové a čekají nejvýše 4 s. Neúspěch vždy poznáš
+podle nepravdivé první návratové hodnoty. FiveM může při přenosu `nil` přes
+hranici resources zahodit druhou návratovou hodnotu; samotné chybějící `err`
+proto neznamená úspěch. Povolena je resource
 `pm_adminmenu`. Jinému důvěryhodnému admin menu přiděl v server.cfg:
 
 ```cfg
