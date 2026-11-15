@@ -24,6 +24,7 @@ shared_scripts {
 server_scripts {
     'entrypoint.js',
     'resource/sv_main.lua', --must run first
+    'resource/sv_playerReader.lua',
     'resource/sv_admins.lua',
     'resource/sv_logger.lua',
     'resource/sv_resources.lua',

@@ -12,6 +12,7 @@ import consoleFactory from '@lib/console.js';
 import fatalError from '@lib/fatalError.js';
 import { TimeCounter } from '@modules/Metrics/statsUtils.js';
 import moderationBridge from '../Moderation/bridge.cjs';
+import playerReader from '../PlayerReader/bridge.cjs';
 const console = consoleFactory(modulename);
 
 //Consts & helpers
@@ -101,6 +102,7 @@ export class DbInstance {
         this.dbPath = `${txEnv.profilePath}/data/playersDB.json`;
         this.backupPath = `${txEnv.profilePath}/data/playersDB.backup.json`;
         moderationBridge.attach(this);
+        playerReader.attach(this, txEnv.txaPath, () => txConfig.banlist.requiredHwidMatches);
 
         //Start database instance
         this.setupDatabase();

@@ -33,6 +33,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y lua5.4
           lua5.4 tests/gksphone-announcement.lua
+          lua5.4 tests/player-reader.lua
 
       # Not truly necessary for build, but for now the vite config requires it
       - name: Create .env file
@@ -44,7 +45,7 @@ jobs:
         run: npm run typecheck --workspaces
 
       - name: Test moderation audit
-        run: node --test tests/moderation-bridge.cjs
+        run: node --test tests/moderation-bridge.cjs tests/player-reader.cjs
 
       - name: Build project
         run: |
