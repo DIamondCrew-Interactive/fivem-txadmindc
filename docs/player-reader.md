@@ -13,10 +13,10 @@ local result, err = exports.monitor:SearchPlayers('fivem:904336', 25, 0)
 local history, err = exports.monitor:GetPlayerHistory('license:' .. hash, 50, 0)
 ```
 
-Exporty jsou pouze serverové a čekají nejvýše 4 s. Neúspěch vždy poznáš
-podle nepravdivé první návratové hodnoty. FiveM může při přenosu `nil` přes
-hranici resources zahodit druhou návratovou hodnotu; samotné chybějící `err`
-proto neznamená úspěch. Povolena je resource
+Exporty jsou pouze serverové a čekají nejvýše 4 s. Od v1.0.15 vracejí při
+každé chybě `false, kod_chyby`; úspěch dál vrací původní tabulku bez změny
+schématu. Předchozí v1.0.14 vracela při chybě `nil`, takže FiveM mohlo při
+přenosu mezi resources zahodit i druhou návratovou hodnotu. Povolena je resource
 `pm_adminmenu`. Jinému důvěryhodnému admin menu přiděl v server.cfg:
 
 ```cfg
@@ -26,6 +26,15 @@ add_ace resource.nazev_menu dci.txadmin.read allow
 Toto ACE povoluje pouze volání resource, nikoli přístup hráče. Volající menu
 musí samo ověřit své administrátorské oprávnění a výsledek neposílat běžným
 hráčům. Exporty nemají žádné RegisterNetEvent ani klientské rozhraní.
+
+Chybové kódy: `invalid_query`, `invalid_identifier`, `invalid_pagination`,
+`invalid_request` (fallback pro HTTP 400 bez čitelného těla),
+`rate_limited`, `forbidden_resource`, `reader_unavailable`, `reader_timeout`;
+služba předává také své kódy jako `database_unavailable`, `service_unavailable`
+nebo `unauthorized`. Volající rozlišuje transportní chybu exportu (`pcall`)
+od běžné odpovědi `false, kod_chyby`. Adaptér čte také čtvrtý argument
+HTTP callbacku FiveM (`errorData`), kam runtime při HTTP chybě předává
+diagnostiku s JSON odpovědí. Diagnostický text samotný se nevrací.
 
 ## HTTP kontrakt
 
